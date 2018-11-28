@@ -1,4 +1,4 @@
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.optimizers import Adam
 from collections import deque
@@ -106,12 +106,11 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay
     
     def load(self, name):
-        print(self.model.get_weights)
-        self.model.load_weights(name)
-        print(self.model.get_weights)
+        del self.model
+        self.model = load_model(name)
 
     def save(self, name):
-        self.model.save_weights(name)
+        self.model.save(name)
     
 if __name__ == "__main__":
     # initialize gym environment and the agent
@@ -126,7 +125,7 @@ if __name__ == "__main__":
 
     agent = DQNAgent(state_size,action_size)
 
-    agent.load("cartpole-dqn.h5")
+    #agent.load("cartpole-dqn.h5")
 
     # Iterate the game
     for e in range(episodes):
