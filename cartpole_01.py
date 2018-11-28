@@ -105,39 +105,81 @@ class DQNAgent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
     
+    def load(self, name):
+        print(self.model.get_weights)
+        self.model.load_weights(name)
+        print(self.model.get_weights)
+
+    def save(self, name):
+        self.model.save_weights(name)
+    
 if __name__ == "__main__":
     # initialize gym environment and the agent
-    env = gym.make('CartPole-v0')
-    print(env)
-    agent = DQNAgent(4,2)
-    episodes = 10000
+    env = gym.make('CartPole-v1')
+
+    # Número de entradas (información del estado) y salidas (posibles acciones)
+    action_size = env.action_space.n
+    state_size = env.observation_space.shape[0]
+
+    # Número de simulaciones a ejecutar
+    episodes = 1000
+
+    agent = DQNAgent(state_size,action_size)
+
+    agent.load("cartpole-dqn.h5")
+
     # Iterate the game
     for e in range(episodes):
+
         # reset state in the beginning of each game
+        # Por cada episodio, empezamos de nuevo
         state = env.reset()
+
+        #Conversión de la información del estado a matriz 1x4
         state = np.reshape(state, [1, 4])
+
         # time_t represents each frame of the game
         # Our goal is to keep the pole upright as long as possible until score of 500
         # the more time_t the more score
-        for time_t in range(500):
+
+        # time_t -> Objetivo temporal a conseguir, por cada frame obtenemos un punto
+        # El episodio se acaba cuando llegamos a ese objetivo o la pértiga se cae
+        for time_t in range(1000):
+
             # turn this on if you want to render
+
             # env.render()
+
             # Decide action
+            #Decidir una acción basándose en el estado
             action = agent.act(state)
+
             # Advance the game to the next frame based on the action.
             # Reward is 1 for every frame the pole survived
+
+            # Obtener el siguiente estado usando la acción a realizar
             next_state, reward, done, _ = env.step(action)
+            #Conversión a matriz de 1x4
             next_state = np.reshape(next_state, [1, 4])
+
             # Remember the previous state, action, reward, and done
+            # Añadir a la memoria el estado, la acción tomada, la recompensa, el 
+            # siguiente estado y si se finalizó el juego o no
             agent.remember(state, action, reward, next_state, done)
+
             # make next_state the new current state for the next frame.
+            #Tras realizar la acción nos encontramos en el próximo estado
             state = next_state
+
             # done becomes True when the game ends
-            # ex) The agent drops the pole
             if done:
                 # print the score and break out of the loop
                 print("episode: {}/{}, score: {}"
                       .format(e, episodes, time_t))
                 break
         # train the agent with the experience of the episode
-        agent.replay(32)
+        if e > 32:
+            agent.replay(32)
+        
+    agent.save("cartpole-dqn.h5")
+    print("Guardado")
