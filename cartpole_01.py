@@ -106,11 +106,10 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay
     
     def load(self, name):
-        del self.model
-        self.model = load_model(name)
+        self.model.load_weights(name)
 
     def save(self, name):
-        self.model.save(name)
+        self.model.save_weights(name)
     
 if __name__ == "__main__":
     # initialize gym environment and the agent
@@ -125,6 +124,8 @@ if __name__ == "__main__":
 
     agent = DQNAgent(state_size,action_size)
 
+    done = False
+    batch_size = 32
     #agent.load("cartpole-dqn.h5")
 
     # Iterate the game
@@ -135,7 +136,7 @@ if __name__ == "__main__":
         state = env.reset()
 
         #Conversión de la información del estado a matriz 1x4
-        state = np.reshape(state, [1, 4])
+        state = np.reshape(state, [1, state_size])
 
         # time_t represents each frame of the game
         # Our goal is to keep the pole upright as long as possible until score of 500
@@ -143,7 +144,7 @@ if __name__ == "__main__":
 
         # time_t -> Objetivo temporal a conseguir, por cada frame obtenemos un punto
         # El episodio se acaba cuando llegamos a ese objetivo o la pértiga se cae
-        for time_t in range(1000):
+        for time_t in range(500):
 
             # turn this on if you want to render
 
@@ -159,8 +160,8 @@ if __name__ == "__main__":
             # Obtener el siguiente estado usando la acción a realizar
             next_state, reward, done, _ = env.step(action)
             #Conversión a matriz de 1x4
-            next_state = np.reshape(next_state, [1, 4])
-
+            next_state = np.reshape(next_state, [1, state_size])
+            reward = reward if not done else -10
             # Remember the previous state, action, reward, and done
             # Añadir a la memoria el estado, la acción tomada, la recompensa, el 
             # siguiente estado y si se finalizó el juego o no
@@ -173,12 +174,13 @@ if __name__ == "__main__":
             # done becomes True when the game ends
             if done:
                 # print the score and break out of the loop
-                print("episode: {}/{}, score: {}"
-                      .format(e, episodes, time_t))
+                print("episode: {}/{}, score: {}, e:{:.2}"
+                      .format(e, episodes, time_t, agent.epsilon))
                 break
-        # train the agent with the experience of the episode
-        if e > 32:
-            agent.replay(32)
+            # train the agent with the previous experiences (each frame)
+            if len(agent.memory) > batch_size:
+                agent.replay(batch_size)
         
-    agent.save("cartpole-dqn.h5")
+        if e % 10 == 0:
+            agent.save("cartpole-dqn.h5")
     print("Guardado")
