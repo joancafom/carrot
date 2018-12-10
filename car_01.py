@@ -6,6 +6,9 @@ import numpy as np
 import random
 import gym
 
+#from gym.envs.box2d.car_racing import CarRacing
+
+
 #action = [izq, avanza, dcha, atrás, nada]
 
 # Deep Q-learning Agent
@@ -54,7 +57,7 @@ class DQNAgent:
         model = Sequential()
         
         # 1ra Capa, Entrada de imágenes normalizadas
-        model.add(Conv2D(24, (5, 5), strides=(2,2), activation='relu', input_shape=(self.state_size_w, self.state_size_h, self.state_size_d)))
+        model.add(Conv2D(24, (5, 5), strides=(2,2), activation='relu', input_shape=(self.state_size_h, self.state_size_w, self.state_size_d)))
         model.add(Conv2D(36, (5, 5), strides=(2,2), activation='relu'))
         model.add(Conv2D(48, (5, 5), strides=(2,2), activation='relu'))
         model.add(Conv2D(64, (3, 3), activation='relu'))
@@ -167,12 +170,15 @@ if __name__ == "__main__":
         # Por cada episodio, empezamos de nuevo
         state = env.reset()
 
+        # Reward acumulado
+        cumulated_reward = 0
+
         # time_t -> Objetivo temporal a conseguir, por cada frame obtenemos un punto
         # El episodio se acaba cuando todas las tiles se visitan o se consume el tiempo (gym)
         for time_t in range(500):
             
             #Conversión de la información de la imagen de estado a matriz 1x200x60x3 (RGB)
-            state = np.reshape(state, [1, agent.state_size_w, agent.state_size_h,agent.state_size_d])
+            state = np.reshape(state, [1, agent.state_size_h, agent.state_size_w,agent.state_size_d])
 
             # turn this on if you want to render
 
@@ -188,7 +194,7 @@ if __name__ == "__main__":
             next_state, reward, done, _ = env.step(converted_action)
 
             #Conversión a matriz de 1x200x60x3 (el primer número indica el batch/sample al que pertenece la imagen)
-            next_state = np.reshape(next_state, [1, agent.state_size_w, agent.state_size_h, agent.state_size_d])
+            next_state = np.reshape(next_state, [1, agent.state_size_h, agent.state_size_w, agent.state_size_d])
             reward = reward if not done else -10
 
             # Añadir a la memoria el estado, la acción tomada, la recompensa, el 
@@ -198,13 +204,20 @@ if __name__ == "__main__":
             # make next_state the new current state for the next frame.
             #Tras realizar la acción nos encontramos en el próximo estado
             state = next_state
+            cumulated_reward += reward
 
             # done becomes True when the game ends
             if done:
                 # print the score and break out of the loop
-                print("episode: {}/{}, score: {}, e:{:.2}"
-                      .format(e, episodes, time_t, agent.epsilon))
+                print("episode: {}/{}, frame: {}, e:{:.2}, reward: {}, action: {}"
+                      .format(e, episodes, time_t, agent.epsilon, cumulated_reward, action))
                 break
+            else:
+                # print the score and break out of the loop
+                print("Non-episode: {}/{}, frame: {}, e:{:.2}, score: {}, action: {}"
+                      .format(e, episodes, time_t, agent.epsilon, cumulated_reward, action))
+
+            
             # train the agent with the previous experiences (each frame)
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
