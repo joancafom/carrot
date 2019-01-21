@@ -5,8 +5,11 @@ from collections import deque
 import numpy as np
 import random
 import gym
+from keras import backend as K
+import cv2
+from PIL import Image
 
-#from gym.envs.box2d.car_racing import CarRacing
+from gym.envs.box2d.car_racing import CarRacing
 
 actions_meaning = ['Izquierda', 'Centro', 'Derecha', 'Izq-Gas', 'Centro-Gas', 'Dcha-Gas']
 
@@ -164,14 +167,14 @@ if __name__ == "__main__":
     env = gym.make('CarRacing-v0')
 
     # Número de simulaciones a ejecutar
-    episodes = 1000
+    episodes = 10
 
     agent = DQNAgent()
 
     done = False
     batch_size = 32
 
-    #agent.load("cartpole-dqn.h5")
+    agent.load("cartpole-dqn.h5")
 
     # Iterate the game
     for e in range(episodes):
@@ -179,7 +182,7 @@ if __name__ == "__main__":
         # reset state in the beginning of each game
         # Por cada episodio, empezamos de nuevo
         state = env.reset()
-        agent.epsilon = 1.0
+        agent.epsilon = 0.5
 
         # Reward acumulado
         cumulated_reward = 0
@@ -189,6 +192,8 @@ if __name__ == "__main__":
         for time_t in range(250):
             
             #Conversión de la información de la imagen de estado a matriz 1x200x60x3 (RGB)
+            if time_t == 0:
+                state = state[29:95]
             state = np.reshape(state, [1, agent.state_size_h, agent.state_size_w,agent.state_size_d])
 
             # turn this on if you want to render
@@ -204,7 +209,16 @@ if __name__ == "__main__":
             # Obtener el siguiente estado usando la acción a realizar
             next_state, reward, done, _ = env.step(gym_action_to_perform)
 
+            next_state = next_state[29:95]
+
+            if time_t == 50:
+                i = np.asarray(next_state)
+                img = Image.fromarray(i, 'RGB')
+                img.save('my.png')
+
+
             #Conversión a matriz de 1x200x60x3 (el primer número indica el batch/sample al que pertenece la imagen)
+            
             next_state = np.reshape(next_state, [1, agent.state_size_h, agent.state_size_w, agent.state_size_d])
 
             # Añadir a la memoria el estado, la acción tomada, la recompensa, el 
@@ -231,7 +245,60 @@ if __name__ == "__main__":
             # train the agent with the previous experiences (each frame)
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
+
+            # if time_t == 50:
+
+            #     state = np.reshape(state, [agent.state_size_h, agent.state_size_w,agent.state_size_d])
+            #     i = np.asarray(state)
+            #     img = Image.fromarray(i, 'RGB')
+            #     img.save('my2.png')
+
         
-        if e % 10 == 0:
-            agent.save("cartpole-dqn.h5")
-    print("Guardado")
+        #if e % 10 == 0:
+        agent.save("cartpole-dqn.h5")
+        print("Guardado")
+
+    def get_output_layer(model, layer_name):
+        # get the symbolic outputs of each "key" layer (we gave them unique names).
+        layer_dict = dict([(layer.name, layer) for layer in model.layers])
+        layer = layer_dict[layer_name]
+        return layer
+
+    def global_average_pooling(x):
+        return K.mean(x, axis = (2, 3))
+    
+    def global_average_pooling_shape(input_shape):
+        return input_shape[0:2]
+	     
+    def visualize_class_activation_map(img_path, output_path):
+        agent = DQNAgent()
+        agent.load("cartpole-dqn.h5")
+        model = agent.model()
+
+        original_img = cv2.imread(img_path, 1)
+        width, height, _ = original_img.shape
+
+        #Reshape to the network input shape (3, w, h).
+        img = np.array([np.transpose(np.float32(original_img), (2, 0, 1))])
+        
+        #Get the 512 input weights to the softmax.
+        class_weights = model.layers[-1].get_weights()[0]
+        final_conv_layer = get_output_layer(model, "conv5_3")
+        get_output = K.function([model.layers[0].input], \
+                    [final_conv_layer.output, 
+        model.layers[-1].output])
+        [conv_outputs, predictions] = get_output([img])
+        conv_outputs = conv_outputs[0, :, :, :]
+
+        #Create the class activation map.
+        cam = np.zeros(dtype = np.float32, shape = conv_outputs.shape[1:3])
+        for i, w in enumerate(class_weights[:, 1]):
+            cam += w * conv_outputs[i, :, :]
+        print("predictions")
+        print(predictions)
+        cam /= np.max(cam)
+        cam = cv2.resize(cam, (height, width))
+        heatmap = cv2.applyColorMap(np.uint8(255*cam), cv2.COLORMAP_JET)
+        heatmap[np.where(cam < 0.2)] = 0
+        img = heatmap*0.5 + original_img
+        cv2.imwrite(output_path, img)
