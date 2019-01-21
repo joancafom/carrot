@@ -37,7 +37,7 @@ def train(load_weights=True, frame_to_export=None, learn=True):
         # reset state in the beginning of each game
         # Por cada episodio, empezamos de nuevo
         state = env.reset()
-        agent.epsilon = 1.0
+        agent.epsilon = 0.7
 
         # Reward acumulado
         cumulated_reward = 0
@@ -113,6 +113,6 @@ if __name__ == "__main__":
     res = input('¿Quieres entrenar al coche? Y/N \n')
     
     if 'y' == res or 'Y' == res:
-        train()
+        train(frame_to_export=100)
     else:
         play()
