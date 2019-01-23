@@ -28,7 +28,7 @@ class DQNAgent:
         self.state_size_w = 200
 
         # State_size_d --> Profundidad de la imagen
-        self.state_size_d = 3
+        self.state_size_d = 1
 
         # Action_size --> Número de salidas de la RN (posibles acciones)
         # Descritas en actions_meaning

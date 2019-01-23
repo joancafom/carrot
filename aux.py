@@ -3,6 +3,7 @@ from keras.optimizers import SGD
 
 import numpy as np
 from PIL import Image
+import cv2
 
 def clone_keras_model(model, learning_rate):
     
@@ -57,3 +58,11 @@ def export_image(state, seq):
     i = np.asarray(state)
     img = Image.fromarray(i, 'RGB')
     img.save('images/my_{}.png'.format(seq))
+
+def normalize_image(state):
+    img = Image.fromarray(np.asarray(state), 'RGB')
+    ig = np.array(img.convert('L'))
+    normalized = np.zeros((66, 200))
+    normalized = cv2.normalize(ig, normalized, 0, 255, cv2.NORM_MINMAX)
+
+    return normalized
