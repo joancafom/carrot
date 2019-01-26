@@ -44,7 +44,7 @@ class DQNAgent:
         self.epsilon = 1.0  # exploration rate
 
         # Mínimo de acciones aleatorias
-        self.epsilon_min = 0.01
+        self.epsilon_min = 0.1
 
         # Coeficiente de depreciación de la aleatoriedad 
         self.epsilon_decay = 0.995
@@ -53,7 +53,7 @@ class DQNAgent:
         self.learning_rate = 0.001
 
         #Delayed-Copy interval
-        self.dcopy_interval = 4
+        self.dcopy_interval = 10
 
         # La RN
         self.model = self._build_model()
@@ -61,33 +61,40 @@ class DQNAgent:
         # La copia de la RN
         self.delayed_model = clone_keras_model(self.model, self.learning_rate)
 
+        # Preprocess Parameters
+        self.stack_size = self.state_size_d
+        self.stacked_frames = deque([np.zeros((self.state_size_h,self.state_size_w), 
+        dtype=np.uint8) for i in range(self.stack_size)], maxlen=self.state_size_d)
+
 
     def _build_model(self):
         
+        initializer = 'glorot_normal'
+
         # Neural Net for Deep-Q learning Model based on PilotNet Architecture by NVidia
 
         # Modelo de RN Secuencial (Feed-Forward)
         model = Sequential()
         
         # 1ra Capa, Entrada de imágenes normalizadas
-        model.add(Conv2D(24, (5, 5), strides=(2,2), activation='relu', input_shape=(self.state_size_h, self.state_size_w, self.state_size_d)))
-        model.add(Conv2D(36, (5, 5), strides=(2,2), activation='relu'))
-        model.add(Conv2D(48, (5, 5), strides=(2,2), activation='relu'))
-        model.add(Conv2D(64, (3, 3), activation='relu'))
-        model.add(Conv2D(64, (3, 3), activation='relu'))
+        model.add(Conv2D(24, (5, 5), strides=(2,2), activation='relu', kernel_initializer=initializer, input_shape=(self.state_size_h, self.state_size_w, self.state_size_d)))
+        model.add(Conv2D(36, (5, 5), strides=(2,2), kernel_initializer=initializer, activation='relu'))
+        model.add(Conv2D(48, (5, 5), strides=(2,2), kernel_initializer=initializer, activation='relu'))
+        model.add(Conv2D(64, (3, 3), kernel_initializer=initializer, activation='relu'))
+        model.add(Conv2D(64, (3, 3), kernel_initializer=initializer, activation='relu'))
         model.add(Flatten())
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(50, activation='relu'))
-        model.add(Dense(10, activation='relu'))
+        model.add(Dense(100, kernel_initializer=initializer, activation='relu'))
+        model.add(Dense(50, kernel_initializer=initializer, activation='relu'))
+        model.add(Dense(10, kernel_initializer=initializer, activation='relu'))
         
         #Acciones de la RN. Descritas en actions_meaning
-        model.add(Dense(self.action_size, activation='relu'))
+        model.add(Dense(self.action_size, kernel_initializer=initializer, activation='relu'))
 
         # Cambiar el compiler tb en aux...
         
         #Función de pérdida: MSLE (Mean Squared Logarithmic Error)
         #Investigar optimizer: Actual Stochastic Gradient Descent
-        model.compile(loss='msle',
+        model.compile(loss='mse',
                       optimizer=SGD(lr=self.learning_rate))
         return model
 
@@ -169,6 +176,7 @@ class DQNAgent:
     
     def load(self, name):
         self.model.load_weights(name)
+        self.delayed_model.set_weights(self.model.get_weights())
 
     def save(self, name):
         self.model.save_weights(name)

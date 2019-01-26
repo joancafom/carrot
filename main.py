@@ -2,7 +2,7 @@ import gym
 import os
 import numpy as np
 from car_agent import DQNAgent
-from aux import convert_action_to_gym, export_image
+from aux import convert_action_to_gym, export_image, stack_frames
 
 
 # ----- Identificadores para los archivos ------ 
@@ -19,7 +19,7 @@ def train(load_weights=True, frame_to_export=None, learn=True):
     env = gym.make('CarRacing-v0')
 
     # Número de simulaciones a ejecutar
-    episodes = 10
+    episodes = 100
     time_limit = 250
 
     agent = DQNAgent()
@@ -42,46 +42,47 @@ def train(load_weights=True, frame_to_export=None, learn=True):
         # Reward acumulado
         cumulated_reward = 0
 
-        # Recortamos en el eje Y a las nuevas dimensiones 66x200
-        # 95-29 = 66
-        # 29 es donde se acaba de ver al coche
-        state = state[29:95]
+        # Unimos los 3 últimos frames
+        stacked_state, stacked_frames = stack_frames(agent.stacked_frames, state, True)
+        agent.stacked_frames = stacked_frames
 
         # time_t -> Objetivo temporal a conseguir
         # El episodio se acaba cuando todas las tiles se visitan o se consume el tiempo (gym)
         for time_t in range(time_limit):
             
-            #Conversión de la información de la imagen de estado a matriz 1x200x60x3 (RGB)
-            state = np.reshape(state, [1, agent.state_size_h, agent.state_size_w,agent.state_size_d])
+            # Conversión de la información de la imagen de estado a una válida para la red (1 dimensión más)
+            stacked_state_nn = np.reshape(stacked_state, [1, agent.state_size_h, agent.state_size_w,agent.state_size_d])
 
             # turn this on if you want to render
             env.render()
 
             #Decidir una acción basándose en el estado
-            action_to_perform = agent.act(state)
+            action_to_perform = agent.act(stacked_state_nn)
 
             #Convertimos la salida de nuestra RN al formato que espera gym para actuar
             gym_action_to_perform = convert_action_to_gym(action_to_perform)
 
             # Obtener el siguiente estado usando la acción a realizar
-            next_state, reward, done, _ = env.step(gym_action_to_perform)
-            #Recortamos la imagen
-            next_state = next_state[29:95]
+            next_raw_state, reward, done, _ = env.step(gym_action_to_perform)
+
+            # Obtenemos el grupo de las 3 imágenes (stack)
+            next_stacked_state, next_stacked_frames = stack_frames(agent.stacked_frames, next_raw_state, False)
+            agent.stacked_frames = next_stacked_frames
 
             if time_t == frame_to_export:
-                export_image(next_state, time_t)
+                export_image(next_stacked_state, time_t)
 
             #Conversión a matriz de 1x200x66x3 (el primer número indica el batch/sample al que pertenece la imagen)
-            next_state = np.reshape(next_state, [1, agent.state_size_h, agent.state_size_w, agent.state_size_d])
+            next_stacked_state_nn = np.reshape(next_stacked_state, [1, agent.state_size_h, agent.state_size_w, agent.state_size_d])
 
             # Añadir a la memoria el estado, la acción tomada, la recompensa, el 
             # siguiente estado y si se finalizó el juego o no
             if learn:
-                agent.remember(state, action_to_perform, reward, next_state, done)
+                agent.remember(stacked_state_nn, action_to_perform, reward, next_stacked_state_nn, done)
 
             # make next_state the new current state for the next frame.
             #Tras realizar la acción nos encontramos en el próximo estado
-            state = next_state
+            stacked_state = next_stacked_state
             cumulated_reward += reward
 
             # done becomes True when the game ends
@@ -92,7 +93,7 @@ def train(load_weights=True, frame_to_export=None, learn=True):
                 break
             else:
                 # print the score and break out of the loop
-                print("Episode: {}/{}, frame: {}, e:{:.2}, score: {}, action: {}"
+                print("Episode: {}/{}, frame: {}, e:{:.2}, score: {}, action: {} \n"
                       .format(e, episodes, time_t, agent.epsilon, cumulated_reward, agent.actions_meaning[action_to_perform]))
 
             # train the agent with the previous experiences (each frame)
