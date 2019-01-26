@@ -11,7 +11,7 @@ from aux import clone_keras_model
 
 #Useful to modify in-game characteristics, like
 #printing stats on the screen
-#from gym.envs.box2d.car_racing import CarRacing
+from gym.envs.box2d.car_racing import CarRacing
 
 # Deep Q-learning Agent
 class DQNAgent:
@@ -28,7 +28,7 @@ class DQNAgent:
         self.state_size_w = 200
 
         # State_size_d --> Profundidad de la imagen
-        self.state_size_d = 1
+        self.state_size_d = 3
 
         # Action_size --> Número de salidas de la RN (posibles acciones)
         # Descritas en actions_meaning

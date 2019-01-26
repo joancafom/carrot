@@ -3,7 +3,6 @@ from keras.optimizers import SGD
 
 import numpy as np
 from PIL import Image
-import cv2
 
 def clone_keras_model(model, learning_rate):
     
@@ -55,14 +54,22 @@ def convert_action_to_gym(action):
 
 def export_image(state, seq):
 
-    i = np.asarray(state)
-    img = Image.fromarray(i, 'RGB')
-    img.save('images/my_{}.png'.format(seq))
+    i = np.array(state)
+    imgRgb = Image.fromarray(i, 'RGB')
+    i = np.array(imgRgb.convert('L'))
+    i = binarize(i)
+    imgL = Image.fromarray(i, 'L')
 
-def normalize_image(state):
-    img = Image.fromarray(np.asarray(state), 'RGB')
-    ig = np.array(img.convert('L'))
-    normalized = np.zeros((66, 200))
-    normalized = cv2.normalize(ig, normalized, 0, 255, cv2.NORM_MINMAX)
+    imgRgb.save('images/my_{}_RGB.png'.format(seq))
+    imgL.save('images/my_{}_L.png'.format(seq))
 
-    return normalized
+def binarize(image_array, threshold = 50):
+    b_array = np.array(image_array)
+    for i in range(len(b_array)):
+        for j in range(len(b_array[0])):
+            if b_array[i][j] > threshold:
+                b_array[i][j] = 255
+            else:
+                b_array[i][j] = 0
+    
+    return b_array

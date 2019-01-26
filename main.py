@@ -2,7 +2,7 @@ import gym
 import os
 import numpy as np
 from car_agent import DQNAgent
-from aux import convert_action_to_gym, export_image, normalize_image
+from aux import convert_action_to_gym, export_image
 
 
 # ----- Identificadores para los archivos ------ 
@@ -28,8 +28,8 @@ def train(load_weights=True, frame_to_export=None, learn=True):
     batch_size = 32
 
     # Si queremos cargar los pesos y el fichero existe
-    #if load_weights and os.path.exists(weights_file):
-        #agent.load(weights_file)
+    if load_weights and os.path.exists(weights_file):
+        agent.load(weights_file)
 
     # Iterate the game
     for e in range(episodes):
@@ -45,7 +45,7 @@ def train(load_weights=True, frame_to_export=None, learn=True):
         # Recortamos en el eje Y a las nuevas dimensiones 66x200
         # 95-29 = 66
         # 29 es donde se acaba de ver al coche
-        state = normalize_image(state[29:95])
+        state = state[29:95]
 
         # time_t -> Objetivo temporal a conseguir
         # El episodio se acaba cuando todas las tiles se visitan o se consume el tiempo (gym)
@@ -66,7 +66,7 @@ def train(load_weights=True, frame_to_export=None, learn=True):
             # Obtener el siguiente estado usando la acción a realizar
             next_state, reward, done, _ = env.step(gym_action_to_perform)
             #Recortamos la imagen
-            next_state = normalize_image(next_state[29:95])
+            next_state = next_state[29:95]
 
             if time_t == frame_to_export:
                 export_image(next_state, time_t)
@@ -113,6 +113,6 @@ if __name__ == "__main__":
     res = input('¿Quieres entrenar al coche? Y/N \n')
     
     if 'y' == res or 'Y' == res:
-        train(frame_to_export=100)
+        train(frame_to_export=25)
     else:
         play()
