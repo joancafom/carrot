@@ -11,7 +11,11 @@ import os
 import gym
 import random
 
-from gridworld import gameEnv
+from _aux import convert_action_to_gym, export_image, stack_frames
+from collections import deque
+import tensorflow as tf
+
+#from gridworld import gameEnv
 
 env = gym.make('CarRacing-v0')
 
@@ -30,8 +34,20 @@ def process_state(state):
 
 class Qnetwork():
     def __init__(self, final_layer_size):
-        # The input image of the game is 84 x 84 x 3 (RGB) 
-        self.inputs = Input(shape=[*env.observation_space.shape], name="main_input")
+
+        self.state_size_h = 66
+
+        # State_size_w --> Anchura de la imagen
+        self.state_size_w = 200
+
+        # State_size_d --> Profundidad de la imagen
+        self.state_size_d = 3
+
+        self.stack_size = self.state_size_d
+        self.stacked_frames = deque([np.zeros((self.state_size_h,self.state_size_w), dtype=np.uint8) for i in range(self.stack_size)], maxlen=self.state_size_d)
+
+        # The input image of the game is 84 x 84 x 3 (RGB)
+        self.inputs = Input(shape=(134, 200, 3), name="main_input")
 
         # There will be four layers of convolutions performed on the image input
         # A convolution take a portion of an input and matrix multiplies
@@ -124,14 +140,14 @@ class ExperienceReplay:
 
 batch_size = 64 # How many experiences to use for each training step
 num_epochs = 20 # How many epochs to train
-update_freq = 1 # How often you update the network
+update_freq = 5 # How often you update the network
 y = 0.99 # Discount factor
-prob_random_start = 0.5300 # Starting chance of random action
+prob_random_start = 0.6 # Starting chance of random action
 prob_random_end = 0.1 # Ending chance of random action
 annealing_steps = 1000. # Steps of training to reduce from start_e -> end_e
 num_episodes = 10000 # How many episodes of game environment to train
 pre_train_episodes = 100 # Number of episodes of random actions
-max_num_step = 250 # Maximum allowed episode length
+max_num_step = 500 # Maximum allowed episode length
 load_model = True # Whether to load a saved model
 path = "./models" # Path to save our model to
 main_weights_file = path + "/main_weights.h5" # File to save our main weights to
@@ -140,7 +156,7 @@ target_weights_file = path + "/target_weights.h5" # File to save our target weig
 final_layer_size = 512 # Size of the final convolution layer before 
                        # splitting into Advantage and Value streams
 tau = 1 # Rate to update target network toward primary network
-goal = 250
+goal = 500
 
 # Reset everything
 K.clear_session()
@@ -165,8 +181,8 @@ num_steps = [] # Tracks number of steps per episode
 rewards = [] # Tracks rewards per episode
 total_steps = 0 # Tracks cumulative steps taken in training
 
-print_every = 50 # How often to print status
-save_every = 5 # How often to save
+print_every = 1 # How often to print status
+save_every = 1 # How often to save
 
 losses = [0] # Tracking training losses
 
@@ -192,7 +208,9 @@ while num_episode < num_episodes:
     # Get the game state from the environment
     state = env.reset()
     env.env.viewer.window.dispatch_events()
-    state = process_state(state)
+    stacked_state, stacked_frames = stack_frames(main_qn.stacked_frames, state, True)
+    main_qn.stacked_frames = stacked_frames
+    state = process_state(stacked_state)
 
     done = False # Game is complete
     sum_rewards = 0 # Running sum of rewards in episode
@@ -213,7 +231,12 @@ while num_episode < num_episodes:
 
         # Take the action and retrieve the next state, reward and done
         next_state, reward, done, _ = env.step(actions_gym[action])
-        next_state = process_state(next_state)
+        next_stacked_state, next_stacked_frames = stack_frames(main_qn.stacked_frames, next_state, False)
+        main_qn.stacked_frames = next_stacked_frames
+        next_state = process_state(next_stacked_state)
+
+        if cur_step == 50:
+            export_image(next_stacked_state, cur_step)
 
         # Setup the episode to be stored in the episode buffer
         episode = np.array([[state],action,reward,[next_state],done])
