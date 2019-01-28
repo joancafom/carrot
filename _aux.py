@@ -52,6 +52,46 @@ def convert_action_to_gym(action):
     
     return res
 
+
+def convert_action_to_nn(gym_action):
+    """Converts a gym_action to a valid one
+    for the NN"""
+
+    #NN's Actions --> ['Izquierda', 'Centro', 'Derecha', 
+    #                'Izq-Gas', 'Centro-Gas', 'Dcha-Gas']
+    #res --> actions of the gym car [steer, gas, break]
+   
+    # By default, we return Centro
+    res = 1
+
+    # Legacy support for brake...
+    if gym_action[2] != 0.0:
+        print('You should not use this action')
+        return 6
+
+    # We check if 'Gas' is enabled
+    if gym_action[1] == 0.0:
+        # Gas disabled
+        if gym_action[0] == -1.0:
+            # Left
+            res = 0
+        elif gym_action[0] == 1.0:
+            # Rigth
+            res = 2
+    else:
+        # Gas enabled
+        if gym_action[0] == -1.0:
+            # Left + Gas
+            res = 3
+        elif gym_action[0] == 0.0:
+            # Centre + Gas
+            res = 4
+        else:
+            # Right + Gas
+            res = 5
+
+    return res
+
 def export_image(state, seq):
 
     denormalized_state = state * 255.0

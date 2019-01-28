@@ -5,8 +5,18 @@ import numpy as np
 # Image Export
 import os
 from PIL import Image
+from _aux import convert_action_to_nn
 
 PATH = 'record/'
+ACT_DESCRIPTIONS = [
+        'Izquierda',
+        'Centro',
+        'Derecha',
+        'Izq Gas',
+        'Centro Gas',
+        'Dcha Gas',
+        'Freno'
+]
 
 if __name__=="__main__":
         
@@ -44,6 +54,8 @@ if __name__=="__main__":
                 steps = 0
                 restart = False
                 while True:
+                        a_nn = convert_action_to_nn(a)
+                        print('{} - {}'.format(a_nn, ACT_DESCRIPTIONS[a_nn]))
                         s, r, done, info = env.step(a)
                         total_reward += r
                         if steps % 200 == 0 or done:
