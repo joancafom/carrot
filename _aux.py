@@ -160,3 +160,30 @@ def stack_frames(stacked_frames, state, is_new_episode, state_size_h=66, state_s
         stacked_state = np.stack(stacked_frames, axis=2)
     
     return stacked_state, stacked_frames
+
+# Escritura de un pack
+
+import os
+import csv
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def prepare_dir():
+
+    RECORD_DIRECTORY = os.path.join(BASE_DIR, 'records')
+
+    if not os.path.exists(RECORD_DIRECTORY):
+        os.makedirs(RECORD_DIRECTORY)
+
+# Patrón: pack_{ddMMYYYYHHmmss}.carrots
+def write_pack(state, action, reward, next_state, done, file_date):
+
+    get_file_path = lambda x: os.path.join(BASE_DIR, 'records/pack_{}.carrots')
+
+    with open(get_file_path(file_date), mode='a', encoding='utf-8') as pack:
+
+        file_writer = csv.writer(pack, delimiter='|')
+        file_writer.writerow(['State', 'Action', 'Reward', 'Next State', 'Done'])
+
+        
+    return None
