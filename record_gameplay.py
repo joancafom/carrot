@@ -100,6 +100,7 @@ def play(csv_writer, summary_file, episode_path):
                 summary_file.flush()
 
                 total_reward += reward
+                print(type(reward))
                 if steps % 200 == 0 or done:
                         print("\naction " + str(["{:+0.2f}".format(x) for x in a]))
                         print("step {} total_reward {:+0.2f}".format(steps, total_reward))
@@ -146,5 +147,5 @@ if __name__ == "__main__":
         # Close the file's writing stream
         summary.close()
 
-        print('*** Gameplay was succesfully saved! \n')
-        print('\t Path: {}'.format(gameplay_path))
+        print('*** Gameplay was succesfully saved! *** \n')
+        print('Path: {}'.format(gameplay_path))
