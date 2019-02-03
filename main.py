@@ -11,166 +11,260 @@ from experience_replay import ExperienceReplay
 # Initialize the CarRacing environment
 env = gym.make('CarRacing-v0')
 
-
-
-# ----- Training hyperparameters ----- 
-
-# How many images to use in each training session our agent performs
-batch_size = 64
-# Number of epochs (# of forward and backward passes) to train
-num_epochs = 20
-# How often to perform an update on the networks' weights
-update_freq = 5
-
-# Number of steps needed to reduce epsilon -> epsilon_min
-annealing_steps = 1000.0
-# Maximum number of episodes allowed if we can't reach our goal
-max_num_episodes = 10000
-# Number of episodes in which only random actions will be taken
-# it is usually done at the beginning
-pre_train_episodes = 100
-# Episode's maximum length (we'll finish it if overpassed)
-max_num_step = 500
-# Whether you want to load previous saved weights 
-# or just start the training from the beginning.
-# Caution! If weights exist in the directory but
-# you decide to not load them, they will be overwritten 
-# by the new ones.
-load_models = False
-
-# Training goal: If reached, the training will stop
-# and it will be considered as successful
-goal = 500
-
-
-
-# ----- Set up section ----- 
-# Reset Keras cache and any previous content in memory
-K.clear_session()
-
-# Setup our Agent
-car = CarAgent(load_models=load_models)
-# Print a summary of the model
-car.main_qn.summary()
-
-# We'll begin by acting complete randomly. As we gain experience and improve,
-# we will begin reducing the probability of acting randomly, and instead
-# take the actions that our Q network suggests
-prob_random_drop = (car.epsilon - car.epsilon_min) / annealing_steps
-
-
-
 # ----- Statistics section ----- 
+
 # Tracks rewards per episode
 rewards = []
-
 # How often the statistics are printed
 print_every = 50
 # How often we dump the agent's weights
 save_every = 5
-
 # Tracks training losses
 losses = [0]
 
 
 
-# ----- Training section ----- 
+# ----- Train & Play sections ----- 
 
-num_episode = 0
-while num_episode < max_num_episodes:
+def train(car, batch_size, num_epochs, update_freq, annealing_steps, 
+        max_num_episodes, pre_train_episodes, max_num_step, goal):
 
-    # Create an experience replay buffer for the current episode
-    episode_buffer = ExperienceReplay(buffer_size=max_num_step)
+    # We'll begin by acting complete randomly. As we gain experience and improve,
+    # we will begin reducing the probability of acting randomly, and instead
+    # take the actions that our Q network suggests
+    prob_random_drop = (car.epsilon - car.epsilon_min) / annealing_steps
 
-    # Get the game state from the environment
-    state = env.reset()
-    # Solves the bug that prevents gym from rendering
-    # in 'state_pixels' mode
-    env.env.viewer.window.dispatch_events()
+    num_episode = 0
+    while num_episode < max_num_episodes:
 
-    # Process the state as a stack of three images
-    stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
-    # Save the last frames used to produce the stack 
-    # (they will be used to create the next one)
-    car.stacked_frames = stacked_frames
-    state = stacked_state
+        # Create an experience replay buffer for the current episode
+        episode_buffer = ExperienceReplay(buffer_size=max_num_step)
 
-    # Whether the Game is complete or not
-    done = False
-    # Total reward obtained within the episode
-    sum_rewards = 0
-    # Current step of the episode
-    cur_step = 0
+        # Get the game state from the environment
+        state = env.reset()
+        # Solves the bug that prevents gym from rendering
+        # in 'state_pixels' mode
+        env.env.viewer.window.dispatch_events()
 
-    while cur_step < max_num_step and not done:
-        
-        cur_step += 1
-        env.render(mode='state_pixels')
-        
-        # Get the action to perform for the state
-        action = car.get_action(state, is_random=(num_episode < pre_train_episodes))
-
-        # Perform the action and retrieve the next state, reward and done
-        next_state, reward, done, _ = env.step(convert_action_to_gym(action))
-        
         # Process the state as a stack of three images
-        next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
-        car.stacked_frames = next_stacked_frames
-        next_state = next_stacked_state
+        stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
+        # Save the last frames used to produce the stack 
+        # (they will be used to create the next one)
+        car.stacked_frames = stacked_frames
+        state = stacked_state
 
-        if cur_step == 50:
-            export_image(next_stacked_state, cur_step)
+        # Whether the Game is complete or not
+        done = False
+        # Total reward obtained within the episode
+        sum_rewards = 0
+        # Current step of the episode
+        cur_step = 0
 
-        # Set up the episode to be stored in the episode buffer
-        episode = np.array([[state],action,reward,[next_state],done])
-        episode = episode.reshape(1,-1)
+        while cur_step < max_num_step and not done:
 
-        # Store the experience in the episode buffer
-        episode_buffer.add(episode)
+            cur_step += 1
+            env.render(mode='state_pixels')
 
-        # Update the running rewards
-        sum_rewards += reward
+            # Get the action to perform for the state
+            action = car.get_action(state, is_random=(num_episode < pre_train_episodes))
 
-        # Update the state
-        state = next_state
+            # Perform the action and retrieve the next state, reward and done
+            next_state, reward, done, _ = env.step(convert_action_to_gym(action))
 
-    # Once the episode's finished, we proceed to train the network
-    if num_episode > pre_train_episodes:
+            # Process the state as a stack of three images
+            next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
+            car.stacked_frames = next_stacked_frames
+            next_state = next_stacked_state
 
-        if car.epsilon > car.epsilon_min:
-            # Drop the probability of a random action
-            car.epsilon -= prob_random_drop
+            if cur_step == 50:
+                export_image(next_stacked_state, cur_step)
 
-        if num_episode % update_freq == 0:
-            for num_epoch in range(num_epochs):
-                loss = car.train(batch_size)
-                losses.append(loss)
-                
-            # Update the target model with values from the main model
-            car.update_target_network()
-            
-            # We add 1 as num_episode starts in 0
-            if (num_episode + 1) % save_every == 0:
-                # Save the model
-                car.save_models()
+            # Set up the episode to be stored in the episode buffer
+            episode = np.array([[state],action,reward,[next_state],done])
+            episode = episode.reshape(1,-1)
+
+            # Store the experience in the episode buffer
+            episode_buffer.add(episode)
+
+            # Update the running rewards
+            sum_rewards += reward
+
+            # Update the state
+            state = next_state
+
+        # Once the episode's finished, we proceed to train the network
+        if num_episode > pre_train_episodes:
+
+            if car.epsilon > car.epsilon_min:
+                # Drop the probability of a random action
+                car.epsilon -= prob_random_drop
+
+            if num_episode % update_freq == 0:
+                for num_epoch in range(num_epochs):
+                    loss = car.train(batch_size)
+                    losses.append(loss)
+
+                # Update the target model with values from the main model
+                car.update_target_network()
+
+                # We add 1 as num_episode starts in 0
+                if (num_episode + 1) % save_every == 0:
+                    # Save the model
+                    car.save_models()
+
+        # Increment the episode counter
+        num_episode += 1
+
+        # Dump the episode buffer to the main one
+        car.experience_buffer.add(episode_buffer.buffer)
+        rewards.append(sum_rewards)
+
+        # Print the statistics
+        if num_episode % print_every == 0:
+
+            mean_loss = np.mean(losses[-(print_every * num_epochs):])
+
+            print("Num episode: {} Mean reward: {:0.4f} Prob random: {:0.4f}, Loss: {:0.04f}".format(
+                num_episode, np.mean(rewards[-print_every:]), car.epsilon, mean_loss))
+            if np.mean(rewards[-print_every:]) >= goal:
+                print("Training complete!")
+                break
+
+    car.save_models()
+
+
+
+def play(car, max_num_episodes, max_num_step, goal):
+
+    car.epsilon = car.epsilon_min
+
+    num_episode = 0
+    while num_episode < max_num_episodes:
+
+        # Get the game state from the environment
+        state = env.reset()
+        # Solves the bug that prevents gym from rendering
+        # in 'state_pixels' mode
+        env.env.viewer.window.dispatch_events()
+
+        # Process the state as a stack of three images
+        stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
+        # Save the last frames used to produce the stack 
+        # (they will be used to create the next one)
+        car.stacked_frames = stacked_frames
+        state = stacked_state
+
+        # Whether the Game is complete or not
+        done = False
+        # Total reward obtained within the episode
+        sum_rewards = 0
+        # Current step of the episode
+        cur_step = 0
+
+        while cur_step < max_num_step and not done:
+
+            cur_step += 1
+            env.render()
+
+            # Get the action to perform for the state
+            action = car.get_action(state)
+
+            # Perform the action and retrieve the next state, reward and done
+            next_state, reward, done, _ = env.step(convert_action_to_gym(action))
+
+            # Process the state as a stack of three images
+            next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
+            car.stacked_frames = next_stacked_frames
+            next_state = next_stacked_state
+
+            if cur_step == 50:
+                export_image(next_stacked_state, cur_step)
+
+            # Update the running rewards
+            sum_rewards += reward
+
+            # Update the state
+            state = next_state
+
+        # Increment the episode counter
+        num_episode += 1
+        rewards.append(sum_rewards)
+
+
+
+# ----- Initialization ----- 
+
+def setup(load_models=True):
+    '''
+    Clears Keras session and initializes the car agent
+
+    Returns: a car agent
+    '''
+
+    # Reset Keras cache and any previous content in memory
+    K.clear_session()
+
+    # Setup our Agent
+    car = CarAgent(load_models=load_models)
     
-    # Increment the episode counter
-    num_episode += 1
+    # Print a summary of the model
+    car.main_qn.summary()
 
-    # Dump the episode buffer to the main one
-    car.experience_buffer.add(episode_buffer.buffer)
-    print(len(car.experience_buffer.buffer))
-    rewards.append(sum_rewards)
+    return car
+
+if __name__ == "__main__":
     
-    # Print the statistics
-    if num_episode % print_every == 0:
+    res = input('¿Quieres entrenar al coche? Y/N \n')
+    
+    if 'y' == res or 'Y' == res:
+        print('***** Train *****\n')
+        
+        # Whether you want to load previous saved weights 
+        # or just start the training from the beginning.
+        # Caution! If weights exist in the directory but
+        # you decide to not load them, they will be overwritten 
+        # by the new ones.
+        load_models = False
+        car = setup(load_models=load_models)
 
-        mean_loss = np.mean(losses[-(print_every * num_epochs):])
+        # ----- Training hyperparameters ----- 
 
-        print("Num episode: {} Mean reward: {:0.4f} Prob random: {:0.4f}, Loss: {:0.04f}".format(
-            num_episode, np.mean(rewards[-print_every:]), car.epsilon, mean_loss))
-        if np.mean(rewards[-print_every:]) >= goal:
-            print("Training complete!")
-            break
+        # How many images to use in each training session our agent performs
+        batch_size = 64
+        # Number of epochs (# of forward and backward passes) to train
+        num_epochs = 20
+        # How often to perform an update on the networks' weights
+        update_freq = 5
 
-car.save_models()
+        # Number of steps needed to reduce epsilon -> epsilon_min
+        annealing_steps = 1000.0
+        # Maximum number of episodes allowed if we can't reach our goal
+        max_num_episodes = 10000
+        # Number of episodes in which only random actions will be taken
+        # it is usually done at the beginning
+        pre_train_episodes = 100
+        # Episode's maximum length (we'll finish it if overpassed)
+        max_num_step = 500
+
+        # Training goal: If reached, the training will stop
+        # and it will be considered as successful
+        goal = 500
+
+        # Start the training
+        train(car, batch_size, num_epochs, update_freq, annealing_steps, 
+        max_num_episodes, pre_train_episodes, max_num_step, goal)
+
+    elif 'n' == res or 'N' == res:
+        print('***** Play *****\n')
+        
+        load_models = True
+        car = setup(load_models=load_models)
+
+        # ----- Training hyperparameters ----- 
+
+        max_num_episodes = 5
+        max_num_step = 500
+        goal = 500
+
+        play(car, max_num_episodes, max_num_step, goal)
+        print('Game completed!')

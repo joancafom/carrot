@@ -2,6 +2,10 @@ import numpy as np
 from PIL import Image
 from collections import deque
 
+
+
+# ----- Actions conversion -----
+
 def convert_action_to_gym(action):
     """Converts an action that was output by the NN
     and transforms it into a valid one to use in Gym"""
@@ -32,7 +36,6 @@ def convert_action_to_gym(action):
         res[2] = +0.8
     
     return res
-
 
 def convert_action_to_nn(gym_action):
     """Converts a gym_action to a valid one
@@ -69,7 +72,34 @@ def convert_action_to_nn(gym_action):
 
     return res
 
+
+
+# ----- Image processing -----
+
+def binarize(image_array, threshold = 50):
+    '''
+    Converts a grayscale image into an image that only
+    contains either black (0) or white (255)
+
+    Returns: a numpy array representing the binarized image
+    '''
+
+    b_array = np.array(image_array)
+    for i in range(len(b_array)):
+        for j in range(len(b_array[0])):
+            if b_array[i][j] > threshold:
+                b_array[i][j] = 255
+            else:
+                b_array[i][j] = 0
+    
+    return b_array
+
 def export_image(state, seq):
+    '''
+    Saves the given `state` to two images. One contains
+    one stacked frame per RGB channel (3 in total) and the 
+    other is just its binarization.
+    '''
 
     denormalized_state = state * 255.0
     i = denormalized_state.astype(np.uint8)
@@ -85,20 +115,11 @@ def export_image(state, seq):
     imgGray.save('images/my_{}_Triple.png'.format(seq))
     imgL.save('images/my_{}_Binarized.png'.format(seq))
 
-def binarize(image_array, threshold = 50):
-    b_array = np.array(image_array)
-    for i in range(len(b_array)):
-        for j in range(len(b_array[0])):
-            if b_array[i][j] > threshold:
-                b_array[i][j] = 255
-            else:
-                b_array[i][j] = 0
-    
-    return b_array
-
-# Image Preprocessing for the CNN
 def preprocess_image(rgb_image):
-    
+    '''
+    Prepares an RGB for the NN.
+    Grayscale + Binarization + Normalization
+    '''
     # 1) Grayscale
     res = np.dot(rgb_image[...,:3], [0.299, 0.587, 0.114])
     # 2) Crop the screen
@@ -110,7 +131,7 @@ def preprocess_image(rgb_image):
 
     return res
 
-# freecodecamp
+# Based on the code from freecodecamp
 def stack_frames(stacked_frames, state, is_new_episode, state_size_h=66, state_size_w=200, state_size_d=3, stack_size=3):
     '''
     Processes the state and uses it to produce a stack with the last `stack_size` images in memory
