@@ -3,7 +3,7 @@ import numpy as np
 
 class ExperienceReplay:
     
-    def __init__(self, buffer_size=20000):
+    def __init__(self, buffer_size=10000):
         """ Data structure used to hold game experiences """
         
         # Buffer will contain [state, action, reward, next_state, done]

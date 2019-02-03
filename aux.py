@@ -1,54 +1,35 @@
-from keras.models import clone_model
-from keras.optimizers import SGD
-
 import numpy as np
 from PIL import Image
 from collections import deque
-
-def clone_keras_model(model, learning_rate):
-    
-    res = clone_model(model)
-    res.set_weights(model.get_weights())
-    res.compile(loss='mse',
-                optimizer=SGD(lr=learning_rate))
-    return res
-
 
 def convert_action_to_gym(action):
     """Converts an action that was output by the NN
     and transforms it into a valid one to use in Gym"""
 
-    #NN's Actions --> ['Izquierda', 'Centro', 'Derecha', 
-    #                'Izq-Gas', 'Centro-Gas', 'Dcha-Gas']
-    #res --> actions of the gym car [steer, gas, break]
+    #NN's Actions --> ['Izquierda', 'Centro', 'Derecha', 'Centro-Gas', 'Freno']
+    #res --> Actions of the gym car [steer, gas, break]
    
-    res = [0,0,0]
+    res = [0.0, 0.0, 0.0]
     
     if action == 0:
-        #Izquierda
-        res[0] = -0.5
+        # Izquierda
+        res[0] = -1.0
 
     elif action == 1:
-        #Centro
+        # Centro
         pass
 
     elif action == 2:
-        #Derecha
-        res[0] = 0.5
+        # Derecha
+        res[0] = +1.0
 
     elif action == 3:
-        #Izquierda + Gas
-        res[0] = -0.5
-        res[1] = 0.5
+        # Centro-Gas
+        res[1] = +1.0
 
     elif action == 4:
-        #Centro + Gas
-        res[1] = 0.5
-
-    elif action == 5:
-        #Derecha + Gas
-        res[0] = 0.5
-        res[1] = 0.5
+        # Freno
+        res[2] = +0.8
     
     return res
 
@@ -57,38 +38,34 @@ def convert_action_to_nn(gym_action):
     """Converts a gym_action to a valid one
     for the NN"""
 
-    #NN's Actions --> ['Izquierda', 'Centro', 'Derecha', 
-    #                'Izq-Gas', 'Centro-Gas', 'Dcha-Gas']
+    #NN's Actions --> ['Izquierda', 'Centro', 'Derecha', 'Centro-Gas', 'Freno']
     #res --> actions of the gym car [steer, gas, break]
    
-    # By default, we return Centro
+    # By default, we return 'Centro'
     res = 1
 
-    # Legacy support for brake...
+    # Freno Detection
     if gym_action[2] != 0.0:
-        print('You should not use this action')
-        return 6
+        return 4
 
     # We check if 'Gas' is enabled
     if gym_action[1] == 0.0:
         # Gas disabled
         if gym_action[0] == -1.0:
-            # Left
+            # Izquierda
             res = 0
         elif gym_action[0] == 1.0:
-            # Rigth
+            # Derecha
             res = 2
     else:
         # Gas enabled
-        if gym_action[0] == -1.0:
-            # Left + Gas
-            res = 3
-        elif gym_action[0] == 0.0:
-            # Centre + Gas
-            res = 4
-        else:
-            # Right + Gas
-            res = 5
+        if gym_action[0] != 0.0:
+            # Izq + Gas or Dcha + Gas
+            # This should not be used
+            print('This action is not supported... \n')
+            print('It will be replaced with Centro-Gas')
+
+        res = 3
 
     return res
 
@@ -135,6 +112,13 @@ def preprocess_image(rgb_image):
 
 # freecodecamp
 def stack_frames(stacked_frames, state, is_new_episode, state_size_h=66, state_size_w=200, state_size_d=3, stack_size=3):
+    '''
+    Processes the state and uses it to produce a stack with the last `stack_size` images in memory
+    
+    Returns: 
+        - the stacked frames, ready to be processed by the nn
+        - the frames used to produce the stacked frames
+    '''
 
     #Preprocess frame
     frame = preprocess_image(state)
@@ -160,30 +144,3 @@ def stack_frames(stacked_frames, state, is_new_episode, state_size_h=66, state_s
         stacked_state = np.stack(stacked_frames, axis=2)
     
     return stacked_state, stacked_frames
-
-# Escritura de un pack
-
-import os
-import csv
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-def prepare_dir():
-
-    RECORD_DIRECTORY = os.path.join(BASE_DIR, 'records')
-
-    if not os.path.exists(RECORD_DIRECTORY):
-        os.makedirs(RECORD_DIRECTORY)
-
-# Patrón: pack_{ddMMYYYYHHmmss}.carrots
-def write_pack(state, action, reward, next_state, done, file_date):
-
-    get_file_path = lambda x: os.path.join(BASE_DIR, 'records/pack_{}.carrots')
-
-    with open(get_file_path(file_date), mode='a', encoding='utf-8') as pack:
-
-        file_writer = csv.writer(pack, delimiter='|')
-        file_writer.writerow(['State', 'Action', 'Reward', 'Next State', 'Done'])
-
-        
-    return None

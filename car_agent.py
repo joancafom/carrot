@@ -9,6 +9,7 @@ import random
 
 import os
 from collections import deque
+from experience_replay import ExperienceReplay
 
 
 '''
@@ -24,7 +25,7 @@ class CarAgent:
         # Definition of the different actions our agent can perform
         #   - Index: ID of the action. i.e: 0->'Izquierda'
         #   - Value: A human description of the action
-        self.actions = ['Izquierda', 'Centro', 'Derecha', 'Centro-Gas']
+        self.actions = ['Izquierda', 'Centro', 'Derecha', 'Centro-Gas', 'Freno']
 
         # Dimensions of a single image that will form a stack
         self.state_size_h = 134
@@ -35,9 +36,13 @@ class CarAgent:
         self.stack_size = self.state_size_d
         self.stacked_frames = deque([np.zeros((self.state_size_h,self.state_size_w), dtype=np.uint8) for i in range(self.stack_size)], maxlen=self.state_size_d)
 
+        self.experience_buffer = ExperienceReplay()
+
         # ----- Hyperparameters -----
 
         # Network
+        # Size of the final convolution layer before 
+        # splitting into Advantage and Value streams
         self.final_conv_layer_size = 512
         self.kernel_initializer = 'glorot_normal'
         self.optimizer = 'adam'
@@ -48,6 +53,13 @@ class CarAgent:
         # when we transfer weights from one network
         # to another
         self.tau = 1
+
+        # Random ratio
+        self.epsilon = 0.6
+        self.epsilon_min = 0.1
+        # Discount rate: Devaluation of the 
+        # future actions reward
+        self.gamma = 0.99
 
         
         # ----- Networks -----
@@ -144,9 +156,66 @@ class CarAgent:
 
         return model
     
+    def train(self, batch_size):
+        
+        # Train batch is [[state,action,reward,next_state,done],...]
+        # That is an array of 64 x Experience
+        # An Experience = [state, action, reward, next_state, done]
+        # = 1 x 5
+        # So basically, a train batch has dims 64 x 1 x 5
+        #
+        # We also have to consider:
+        #   state = 134 x 200 x 3
+        #   action = 1
+        #   reward = 1
+        #   next_state = 134 x 200 x 3
+        #   done = 1
+        #
+        train_batch = self.experience_buffer.sample(batch_size)
+
+        # We can transpose the array in order to have access
+        # to the individual components
+        # dim [64 x 1 x 5]^T = dim 5 x 1 x 64
+        # Now we have access to the different packs 
+        train_state, train_action, train_reward, \
+            train_next_state, train_done = train_batch.T
+
+        # Convert the action array into an array of ints so they can be used for indexing
+        train_action = train_action.astype(np.int)
+
+        # Stack the train_state and train_next_state for learning
+        # reshape it to have 64 x (134 x 200 x 3) (stack it in vertical)
+        train_state = np.vstack(train_state)
+        train_next_state = np.vstack(train_next_state)
+
+        # ----- REVIEW -----
+        # Our predictions (actions to take) from the main Q network
+        target_q = self.target_qn.predict(train_state)
+        
+        # The Q values from our target network from the next state
+        target_q_next_state = self.main_qn.predict(train_next_state)
+        train_next_state_action = np.argmax(target_q_next_state,axis=1)
+        train_next_state_action = train_next_state_action.astype(np.int)
+        
+        # Tells whether our game is over or not
+        # If our game has ended, we do not compute the future discounted
+        # reward
+        train_gameover = train_done == 0
+
+        # Q value of the next state based on action
+        train_next_state_values = target_q_next_state[range(batch_size), train_next_state_action]
+
+        # Reward from the action chosen in the train batch
+        actual_reward = train_reward + (self.gamma * train_next_state_values * train_gameover)
+        target_q[range(batch_size), train_action] = actual_reward
+
+        # Train the main model
+        loss = self.main_qn.train_on_batch(train_state, target_q)
+        
+        return loss
+
     # Google's Deep-Mind
     # Fixed Q-Targets
-    # Double DQN Update
     def __transfer_network_weights__(self, source_nn, target_nn, tau):
 
         weights_to_transfer = (np.array(source_nn.get_weights()) * tau) + \
@@ -156,4 +225,25 @@ class CarAgent:
 
     def update_target_network(self, tau=1):
         self.__transfer_network_weights__(self.main_qn, self.target_qn, tau)
+    
+    def get_action(self, state, is_random=False):
+        
+        if np.random.rand() < self.epsilon or is_random:
+            # Act randomly if the threshold is not surpassed
+            # or if we want it to be random.
+            return np.random.randint(len(self.actions))
 
+        else:
+            # Predict the action with the highest Q using the
+            # nn
+            return np.argmax(self.main_qn.predict(np.array([state])))
+
+    def save_models(self):
+        print('Saving models\' weights...')
+        try:
+            self.main_qn.save_weights(self.main_weights_file)
+            self.target_qn.save_weights(self.target_weights_file)
+
+        except Exception as e:
+            print('There was an error while trying to save the weights')
+            print(str(e))
