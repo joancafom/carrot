@@ -3,7 +3,7 @@ from gym.envs.box2d.car_racing import CarRacing
 import numpy as np
 
 # Gameplay Export
-from _aux import convert_action_to_nn
+from aux import convert_action_to_nn
 import os
 import csv
 import datetime

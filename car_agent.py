@@ -188,29 +188,38 @@ class CarAgent:
         train_state = np.vstack(train_state)
         train_next_state = np.vstack(train_next_state)
 
-        # ----- REVIEW -----
         # Our predictions (actions to take) from the main Q network
-        target_q = self.target_qn.predict(train_state)
+        # Regular Q(s, *; w) prediction
+        regular_q = self.main_qn.predict(train_state)
         
-        # The Q values from our target network from the next state
-        target_q_next_state = self.main_qn.predict(train_next_state)
-        train_next_state_action = np.argmax(target_q_next_state,axis=1)
-        train_next_state_action = train_next_state_action.astype(np.int)
+        # The main network chooses the next action with the highest Q
+        # Q(s', *; w)
+        main_next_q = self.main_qn.predict(train_next_state)
+        # next_action = a' = argmax Q(s', *; w)
+        next_action = np.argmax(main_next_q, axis=1)
+        next_action = next_action.astype(np.int)
         
         # Tells whether our game is over or not
         # If our game has ended, we do not compute the future discounted
         # reward
         train_gameover = train_done == 0
 
-        # Q value of the next state based on action
-        train_next_state_values = target_q_next_state[range(batch_size), train_next_state_action]
+        # The target network is now used to estimate the Q values
+        # of taking that action in the next state
+        # target_next_state = Q(s', *; w-)
+        target_next_q = self.target_qn.predict(train_next_state)
+        next_state_values = target_next_q[range(batch_size), next_action]
 
         # Reward from the action chosen in the train batch
-        actual_reward = train_reward + (self.gamma * train_next_state_values * train_gameover)
-        target_q[range(batch_size), train_action] = actual_reward
+        actual_reward = train_reward + (self.gamma * next_state_values * train_gameover)
+        
+        # Update the prediction the main nn would ouput with 
+        # the new values to perform a gradient descent step
+        # regular_q(a) = y_j
+        regular_q[range(batch_size), train_action] = actual_reward
 
         # Train the main model
-        loss = self.main_qn.train_on_batch(train_state, target_q)
+        loss = self.main_qn.train_on_batch(train_state, regular_q)
         
         return loss
 
