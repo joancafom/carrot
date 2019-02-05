@@ -47,9 +47,7 @@ ACT_DESCRIPTIONS = [
         'Izquierda',
         'Centro',
         'Derecha',
-        'Izq Gas',
-        'Centro Gas',
-        'Dcha Gas',
+        'Centro-Gas',
         'Freno'
 ]
 
@@ -100,7 +98,6 @@ def play(csv_writer, summary_file, episode_path):
                 summary_file.flush()
 
                 total_reward += reward
-                print(type(reward))
                 if steps % 200 == 0 or done:
                         print("\naction " + str(["{:+0.2f}".format(x) for x in a]))
                         print("step {} total_reward {:+0.2f}".format(steps, total_reward))
