@@ -298,13 +298,14 @@ class CarRacing(gym.Env, EzPickle):
         return self.step(None)[0]
 
     def step(self, action):
+        action2 = np.array(action, copy=True)
         vel = np.linalg.norm(self.car.wheels[0].linearVelocity)
         if action is not None:
             if vel > 40:
-                action[1] = 0.0
-            self.car.steer(-action[0])
-            self.car.gas(action[1])
-            self.car.brake(action[2])
+                action2[1] = 0.0
+            self.car.steer(-action2[0])
+            self.car.gas(action2[1])
+            self.car.brake(action2[2])
 
         self.car.step(1.0/FPS)
         self.world.Step(1.0/FPS, 6*30, 2*30)
