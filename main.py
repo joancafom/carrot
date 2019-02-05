@@ -107,8 +107,7 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
                 # Update the target model with values from the main model
                 car.update_target_network()
 
-                # We add 1 as num_episode starts in 0
-                if (num_episode + 1) % save_every == 0:
+                if num_episode % save_every == 0:
                     # Save the model
                     car.save_models()
 
