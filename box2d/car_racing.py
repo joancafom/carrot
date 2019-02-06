@@ -293,7 +293,7 @@ class CarRacing(gym.Env, EzPickle):
             success = self._create_track()
             if success: break
             print("retry to generate track (normal if there are not many of this messages)")
-        self.car = Car(self.world, *self.track[0][1:4])
+        self.car = Car(self.world, *self.track[100][1:4])
 
         return self.step(None)[0]
 
