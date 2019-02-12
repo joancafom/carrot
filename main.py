@@ -2,8 +2,10 @@ import gym
 import keras.backend as K
 
 import numpy as np
+import os
 
 from aux import convert_action_to_gym, export_image, stack_frames
+from record_gameplay import RECORD_MAIN_PATH
 
 from car_agent import CarAgent
 from experience_replay import ExperienceReplay
@@ -132,6 +134,98 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
     car.save_models()
 
 
+def train_s(car, batch_size, num_epochs, update_freq):
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    records_path = os.path.join(BASE_DIR, RECORD_MAIN_PATH)
+    
+    num_episode = 0
+    
+    for direc in os.listdir(records_path):
+
+        # Current step of the episode
+        cur_step = 1
+
+        # Create an experience replay buffer for the current episode
+        episode_buffer = ExperienceReplay(buffer_size=2000)
+        
+
+        for e_state, e_next_state, e_action, e_reward, e_done in open_episode(direc):
+
+            if cur_step == 1:
+                state = e_state
+
+                # Process the state as a stack of three images
+                stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
+
+                # Save the last frames used to produce the stack 
+                # (they will be used to create the next one)
+                car.stacked_frames = stacked_frames
+                state = stacked_state
+
+                # Whether the Game is complete or not
+                done = False
+                # Total reward obtained within the episode
+                sum_rewards = 0
+                
+            cur_step += 1
+
+            next_state, reward, done = e_next_state, e_reward, e_done
+
+            # Process the state as a stack of three images
+            next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
+            car.stacked_frames = next_stacked_frames
+            next_state = next_stacked_state
+
+            if cur_step == 50:
+                export_image(next_stacked_state, cur_step)
+
+            # Set up the episode to be stored in the episode buffer
+            episode = np.array([[state],action,reward,[next_state],done])
+            episode = episode.reshape(1,-1)
+
+            # Store the experience in the episode buffer
+            episode_buffer.add(episode)
+
+            # Update the running rewards
+            sum_rewards += reward
+
+            # Update the state
+            state = next_state
+
+        # Once the episode's finished, we proceed to train the network
+        if num_episode % update_freq == 0:
+            for num_epoch in range(num_epochs):
+                loss = car.train(batch_size)
+                losses.append(loss)
+
+            # Update the target model with values from the main model
+            car.update_target_network()
+
+            if num_episode % save_every == 0:
+                # Save the model
+                car.save_models()
+
+        # Increment the episode counter
+        num_episode += 1
+
+        # Dump the episode buffer to the main one
+        car.experience_buffer.add(episode_buffer.buffer)
+        rewards.append(sum_rewards)
+
+        # Print the statistics
+        if num_episode % print_every == 0:
+
+            mean_loss = np.mean(losses[-(print_every * num_epochs):])
+
+            print("Num episode: {} Mean reward: {:0.4f} Prob random: {:0.4f}, Loss: {:0.04f}".format(
+                num_episode, np.mean(rewards[-print_every:]), car.epsilon, mean_loss))
+            if np.mean(rewards[-print_every:]) >= goal:
+                print("Training complete!")
+                break
+
+    car.save_models()
+
 
 def play(car, max_num_episodes, max_num_step, goal):
 
@@ -213,9 +307,9 @@ def setup(load_models=True):
 
 if __name__ == "__main__":
     
-    res = input('¿Quieres entrenar al coche? Y/N \n')
+    res = input('¿Quieres entrenar al coche sin supervisión (t), con supervisión (s) o jugar (p)?  \n')
     
-    if 'y' == res or 'Y' == res:
+    if 't' == res or 'T' == res:
         print('***** Train *****\n')
         
         # Whether you want to load previous saved weights 
@@ -253,7 +347,7 @@ if __name__ == "__main__":
         train(car, batch_size, num_epochs, update_freq, annealing_steps, 
         max_num_episodes, pre_train_episodes, max_num_step, goal)
 
-    elif 'n' == res or 'N' == res:
+    elif 'p' == res or 'P' == res:
         print('***** Play *****\n')
         
         load_models = True
@@ -267,3 +361,26 @@ if __name__ == "__main__":
 
         play(car, max_num_episodes, max_num_step, goal)
         print('Game completed!')
+
+    elif 's' == res or 'S' == res:
+        print('***** Supervised Train *****\n')
+        
+        # Whether you want to load previous saved weights 
+        # or just start the training from the beginning.
+        # Caution! If weights exist in the directory but
+        # you decide to not load them, they will be overwritten 
+        # by the new ones.
+        load_models = False
+        car = setup(load_models=load_models)
+
+        # ----- Training hyperparameters ----- 
+
+        # How many images to use in each training session our agent performs
+        batch_size = 64
+        # Number of epochs (# of forward and backward passes) to train
+        num_epochs = 20
+        # How often to perform an update on the networks' weights
+        update_freq = 5
+
+        # Start the training
+        train_s(car, batch_size, num_epochs, update_freq)
