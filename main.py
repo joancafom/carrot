@@ -5,7 +5,8 @@ import numpy as np
 import os
 
 from aux import convert_action_to_gym, export_image, stack_frames
-from record_gameplay import RECORD_MAIN_PATH
+from record_gameplay import RECORD_MAIN_PATH, BASE_DIR
+from open_gameplays import open_episode
 
 from car_agent import CarAgent
 from experience_replay import ExperienceReplay
@@ -102,7 +103,7 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
                 car.epsilon -= prob_random_drop
 
             if num_episode % update_freq == 0:
-                for num_epoch in range(num_epochs):
+                for _ in range(num_epochs):
                     loss = car.train(batch_size)
                     losses.append(loss)
 
@@ -136,21 +137,22 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
 
 def train_s(car, batch_size, num_epochs, update_freq):
 
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     records_path = os.path.join(BASE_DIR, RECORD_MAIN_PATH)
     
     num_episode = 0
-    
     for direc in os.listdir(records_path):
 
         # Current step of the episode
         cur_step = 1
 
         # Create an experience replay buffer for the current episode
+        # No recorded episode has more than 2000 states
         episode_buffer = ExperienceReplay(buffer_size=2000)
         
+        print('\n--- Episode {} - {}'.format(num_episode, direc))
 
-        for e_state, e_next_state, e_action, e_reward, e_done in open_episode(direc):
+        episode_path = os.path.join(records_path, direc)
+        for e_state, e_next_state, e_action, e_reward, e_done in open_episode(episode_path):
 
             if cur_step == 1:
                 state = e_state
@@ -170,6 +172,7 @@ def train_s(car, batch_size, num_epochs, update_freq):
                 
             cur_step += 1
 
+            action = e_action
             next_state, reward, done = e_next_state, e_reward, e_done
 
             # Process the state as a stack of three images
@@ -181,7 +184,7 @@ def train_s(car, batch_size, num_epochs, update_freq):
                 export_image(next_stacked_state, cur_step)
 
             # Set up the episode to be stored in the episode buffer
-            episode = np.array([[state],action,reward,[next_state],done])
+            episode = np.array([[state], action, reward, [next_state], done])
             episode = episode.reshape(1,-1)
 
             # Store the experience in the episode buffer
@@ -193,9 +196,16 @@ def train_s(car, batch_size, num_epochs, update_freq):
             # Update the state
             state = next_state
 
+        # Increment the episode counter
+        num_episode += 1
+
+        # Dump the episode buffer to the main one
+        car.experience_buffer.add(episode_buffer.buffer)
+        rewards.append(sum_rewards)
+
         # Once the episode's finished, we proceed to train the network
         if num_episode % update_freq == 0:
-            for num_epoch in range(num_epochs):
+            for _ in range(num_epochs):
                 loss = car.train(batch_size)
                 losses.append(loss)
 
@@ -205,13 +215,6 @@ def train_s(car, batch_size, num_epochs, update_freq):
             if num_episode % save_every == 0:
                 # Save the model
                 car.save_models()
-
-        # Increment the episode counter
-        num_episode += 1
-
-        # Dump the episode buffer to the main one
-        car.experience_buffer.add(episode_buffer.buffer)
-        rewards.append(sum_rewards)
 
         # Print the statistics
         if num_episode % print_every == 0:
@@ -310,7 +313,7 @@ if __name__ == "__main__":
     res = input('¿Quieres entrenar al coche sin supervisión (t), con supervisión (s) o jugar (p)?  \n')
     
     if 't' == res or 'T' == res:
-        print('***** Train *****\n')
+        print('***** Unsupervised Training *****\n')
         
         # Whether you want to load previous saved weights 
         # or just start the training from the beginning.
@@ -363,7 +366,7 @@ if __name__ == "__main__":
         print('Game completed!')
 
     elif 's' == res or 'S' == res:
-        print('***** Supervised Train *****\n')
+        print('***** Supervised Training *****\n')
         
         # Whether you want to load previous saved weights 
         # or just start the training from the beginning.
