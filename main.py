@@ -2,6 +2,7 @@ import gym
 import keras.backend as K
 
 import numpy as np
+import matplotlib.pyplot as plt
 import os
 
 from aux import convert_action_to_gym, export_image, stack_frames
@@ -19,7 +20,7 @@ env = gym.make('CarRacing-v0')
 # Tracks rewards per episode
 rewards = []
 # How often the statistics are printed
-print_every = 50
+print_every = 10
 # How often we dump the agent's weights
 save_every = 5
 # Tracks training losses
@@ -135,7 +136,7 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
     car.save_models()
 
 
-def train_s(car, batch_size, num_epochs, update_freq):
+def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
 
     records_path = os.path.join(BASE_DIR, RECORD_MAIN_PATH)
     
@@ -174,6 +175,13 @@ def train_s(car, batch_size, num_epochs, update_freq):
 
             action = e_action
             next_state, reward, done = e_next_state, e_reward, e_done
+
+            if verbose:
+                # Show a video with the processed frames, actions and rewards
+                plt.imshow(state)
+                plt.title('{} # {}'.format(car.actions[action], reward))
+                plt.suptitle('R: {}'.format(sum_rewards))
+                plt.pause(.001)
 
             # Process the state as a stack of three images
             next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
@@ -320,7 +328,7 @@ if __name__ == "__main__":
         # Caution! If weights exist in the directory but
         # you decide to not load them, they will be overwritten 
         # by the new ones.
-        load_models = False
+        load_models = True
         car = setup(load_models=load_models)
 
         # ----- Training hyperparameters ----- 
@@ -373,7 +381,7 @@ if __name__ == "__main__":
         # Caution! If weights exist in the directory but
         # you decide to not load them, they will be overwritten 
         # by the new ones.
-        load_models = False
+        load_models = True
         car = setup(load_models=load_models)
 
         # ----- Training hyperparameters ----- 
@@ -386,4 +394,4 @@ if __name__ == "__main__":
         update_freq = 5
 
         # Start the training
-        train_s(car, batch_size, num_epochs, update_freq)
+        train_s(car, batch_size, num_epochs, update_freq, verbose=False)
