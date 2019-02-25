@@ -207,6 +207,11 @@ def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
         # Increment the episode counter
         num_episode += 1
 
+        # If current step has not incremented then it failed
+        # to load the episode
+        if cur_step == 1:
+            return
+
         # Dump the episode buffer to the main one
         car.experience_buffer.add(episode_buffer.buffer)
         rewards.append(sum_rewards)

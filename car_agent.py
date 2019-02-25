@@ -237,6 +237,9 @@ class CarAgent:
     
     def get_action(self, state, is_random=False):
         
+        # pred = self.main_qn.predict(np.array([state]))
+        # print(pred)
+
         if np.random.rand() < self.epsilon or is_random:
             # Act randomly if the threshold is not surpassed
             # or if we want it to be random.
