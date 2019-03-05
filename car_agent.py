@@ -36,6 +36,8 @@ class CarAgent:
         self.stack_size = self.state_size_d
         self.stacked_frames = deque([np.zeros((self.state_size_h,self.state_size_w), dtype=np.uint8) for i in range(self.stack_size)], maxlen=self.state_size_d)
 
+        # If system requirements are low, reduce the buffer size
+        # accordingly
         self.experience_buffer = ExperienceReplay()
 
         # ----- Hyperparameters -----
@@ -60,6 +62,8 @@ class CarAgent:
         # Discount rate: Devaluation of the 
         # future actions reward
         self.gamma = 0.99
+        # Minimum score we get in our env
+        self.min_score = -0.1
 
         
         # ----- Networks -----
@@ -156,7 +160,7 @@ class CarAgent:
 
         return model
     
-    def train(self, batch_size):
+    def train(self, batch_size, supervised=False):
         
         # Train batch is [[state,action,reward,next_state,done],...]
         # That is an array of 64 x Experience
@@ -213,10 +217,26 @@ class CarAgent:
         # Reward from the action chosen in the train batch
         actual_reward = train_reward + (self.gamma * next_state_values * train_gameover)
         
+        if supervised:
+            # When we are in supervised learning, we suppose that the best action
+            # is always provided. Hence, the  Q of other non-optimal actions must be
+            # decremented using the lowest score our game admits.
+            decrement_reward = self.min_score
+        
         # Update the prediction the main nn would ouput with 
         # the new values to perform a gradient descent step
         # regular_q(a) = y_j
-        regular_q[range(batch_size), train_action] = actual_reward
+        if supervised:
+            # In supervised learning, we must obtain a list
+            # with Q values such as all indices are the minimum
+            # reward possible except for the one referencing the
+            # action taken, that will hold the corresponding computed value.
+            for e_index in range(batch_size):
+                for a_index in range(len(self.actions)):
+                    regular_q[e_index, a_index] = actual_reward[e_index] if \
+                    a_index == train_action[e_index] else decrement_reward
+        else:
+            regular_q[range(batch_size), train_action] = actual_reward
 
         # Train the main model
         loss = self.main_qn.train_on_batch(train_state, regular_q)
@@ -236,9 +256,6 @@ class CarAgent:
         self.__transfer_network_weights__(self.main_qn, self.target_qn, tau)
     
     def get_action(self, state, is_random=False):
-        
-        # pred = self.main_qn.predict(np.array([state]))
-        # print(pred)
 
         if np.random.rand() < self.epsilon or is_random:
             # Act randomly if the threshold is not surpassed

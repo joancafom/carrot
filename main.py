@@ -218,13 +218,16 @@ def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
 
         # Once the episode's finished, we proceed to train the network
         if num_episode % update_freq == 0:
+            print('Entrenando la red...')
+
             for _ in range(num_epochs):
-                loss = car.train(batch_size)
+                loss = car.train(batch_size, supervised=True)
                 losses.append(loss)
 
             # Update the target model with values from the main model
             car.update_target_network()
 
+            print('Entrenamiento completado...')
             if num_episode % save_every == 0:
                 # Save the model
                 car.save_models()
@@ -236,9 +239,6 @@ def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
 
             print("Num episode: {} Mean reward: {:0.4f} Prob random: {:0.4f}, Loss: {:0.04f}".format(
                 num_episode, np.mean(rewards[-print_every:]), car.epsilon, mean_loss))
-            if np.mean(rewards[-print_every:]) >= goal:
-                print("Training complete!")
-                break
 
     car.save_models()
 
@@ -396,7 +396,11 @@ if __name__ == "__main__":
         # Number of epochs (# of forward and backward passes) to train
         num_epochs = 20
         # How often to perform an update on the networks' weights
-        update_freq = 5
+        update_freq = 1
+        # How many iterations over the set of recorded samples
+        iterations = 30
 
         # Start the training
-        train_s(car, batch_size, num_epochs, update_freq, verbose=False)
+        for i in range(iterations):
+            print('\n *** ITERATION {} OF {} *** \n'.format(i, iterations))
+            train_s(car, batch_size, num_epochs, update_freq, verbose=False)
