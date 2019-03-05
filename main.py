@@ -396,7 +396,7 @@ if __name__ == "__main__":
         # Number of epochs (# of forward and backward passes) to train
         num_epochs = 20
         # How often to perform an update on the networks' weights
-        update_freq = 1
+        update_freq = 5
         # How many iterations over the set of recorded samples
         iterations = 30
 
