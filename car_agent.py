@@ -206,7 +206,7 @@ class CarAgent:
         # Tells whether our game is over or not
         # If our game has ended, we do not compute the future discounted
         # reward
-        train_gameover = train_done == 0
+        train_game_not_over = train_done == 0
 
         # The target network is now used to estimate the Q values
         # of taking that action in the next state
@@ -215,7 +215,7 @@ class CarAgent:
         next_state_values = target_next_q[range(batch_size), next_action]
 
         # Reward from the action chosen in the train batch
-        actual_reward = train_reward + (self.gamma * next_state_values * train_gameover)
+        actual_reward = train_reward + (self.gamma * next_state_values * train_game_not_over)
         
         if supervised:
             # When we are in supervised learning, we suppose that the best action
