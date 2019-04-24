@@ -37,107 +37,127 @@ for c in range(1,12):
     #cv2.waitKey(0)
 
     lines = cv2.HoughLinesP(edged2, 1, np.pi/100, 70, minLineLength=5, maxLineGap=10)
-    
-    def yMax(lista):
 
-        p1 = (lista[0][0], lista[0][1])
-        p2 = (lista[0][2], lista[0][3])
+    bottom_center = (w/2, h//2-20)
+    left_point = None
+    left_point_partner = None
+    left_point_distance = None
+    right_point = None
+    right_point_partner = None
+    right_point_distance = None
 
-        if p1[1] > p2[1]:
-            return p1[1]
-        elif p1[1] == p2[1] and p1[0] < p2[0]:
-            return p1[1]
-        else:
-            return p2[1]
 
-    puntos_ordenados = sorted(lines, key=lambda x: yMax(x), reverse=True)
-    res = []
-
+    # Obtenemos los dos puntos más cercanos al bottom-center
     for line in lines:
         x1, y1, x2, y2 = line[0]
-        p1 = (x1, y1)
-        p2 = (x2, y2)
-
-        cv2.circle(roi, (x1, y1), 3, (0, 0, 255), 3)
-        cv2.circle(roi, (x2, y2), 3, (0, 255, 0), 3)
-
-    for line in puntos_ordenados:
-        x1, y1, x2, y2 = line[0]
-        p1 = (x1, y1)
-        p2 = (x2, y2)
-
-        punto_inferior = None
-
-        if not res:
-            res.append(line)
-            cv2.line(roi, (x1, y1), (x2, y2), (255, 0, 0), 3)
-            continue
-
-        if p1[1] > p2[1]:
-            punto_inferior = p1
-        elif p1[1] == p2[1] and p1[0] < p2[0]:
-            punto_inferior = p1
-        else:
-            punto_inferior = p2
-
-        entra = True
-        c = 0
-        print(" ----- Nueva linea -----")
-        for elem in res:   
-            c += 1
-            e = elem[0]
-            dr = (e[2] - e[0], e[3] - e[1])
-            d_a_punto = (p2[0]- p1[0], p2[1]- p1[1])
-
-            cos = np.dot(dr,d_a_punto) / (np.linalg.norm(dr) * np.linalg.norm(d_a_punto))
-            cos_a = np.absolute(cos)
-            print("Cos_a ", cos_a)
-            angle = math.degrees(math.acos(cos))
-            print("ANGLE {}".format(angle))
-            print("Recta {}".format(e))
-            print("dr ", dr)
-            print("dp ", d_a_punto)
-            print("Punto {}".format(punto_inferior))
-            print("DOT ", np.dot(dr,d_a_punto))
-            print("Cos_a".format(punto_inferior), cos_a)
-
-            if cos_a >= 0.949 or len(res) >= 4:
-                print("NO ENTRAAAAA Cos_a".format(punto_inferior), cos_a)
-                entra = entra and False
-                print("\t entra: {}".format(entra))
-            
-            if c == (len(res)):
-                print('wig')
-                print("\t entra: {}".format(entra))
-
-
-        if entra:
-            # print("Recta {}".format(e))
-            # print("dr ", dr)
-            # print("dp ", d_a_punto)
-            # print("Punto {}".format(punto_inferior))
-            # print("DOT ", np.dot(dr,d_a_punto))
-            # print("Cos_a".format(punto_inferior), cos_a)
-            res.append(line)
-
-        #cv2.line(roi, (x1, y1), (x2, y2), (255, 0, 0), 3)
-        # if minor is None:
-        #     minor = [x1, y1]
         
-        # if minor[1] < y1 :
-        #     minor = [x1, y1]
-        # if minor[1] < y2:
-        #     minor = [x2, y2]
+        # Los dos puntos que definen el segmento
+        puntos_linea = [(x1, y1), (x2, y2)]
 
-    #cv2.circle(roi, (minor[0], minor[1]), 3, (255, 255, 0), 3)  
-    #print(points)
-    print("RES ", len(res))
-    for line in res:
-        x1, y1, x2, y2 = line[0]
-        p1 = (x1, y1)
-        p2 = (x2, y2)
-        cv2.line(roi, (x1, y1), (x2, y2), (2, 166, 249), 3)
-        cv2.imshow("Hough {}".format(len(lines)), roi)
-        cv2.waitKey(0)
+        i = 0
+        for punto in puntos_linea:
+            
+            i += 1
+            # Vector que une el punto con el centro
+            d_centro_punto = (punto[0] - bottom_center[0], punto[1] - bottom_center[1])
+            distance = np.linalg.norm(d_centro_punto)
+
+            if bottom_center[0] >= punto[0]:
+                # Se encuentra a la izq
+                if left_point is None or left_point_distance > distance:
+                    left_point = punto
+                    left_point_partner = puntos_linea[(i%len(puntos_linea))]
+                    left_point_distance = distance
+            else:
+                # Se encuentra a la dch
+                if right_point is None or right_point_distance > distance:
+                    right_point = punto
+                    right_point_partner = puntos_linea[(i%len(puntos_linea))]
+                    right_point_distance = distance
+        
+        
+        cv2.circle(roi, (x1, y1), 2, (255, 0, 0), 3)
+        cv2.circle(roi, (x2, y2), 2, (255, 0, 0), 3)
     
+    cv2.circle(roi, left_point, 3, (0, 255, 0), 3)
+    cv2.circle(roi, right_point, 3, (0, 255, 0), 3)
+    cv2.circle(roi, left_point_partner, 3, (0, 0, 255), 3)
+    cv2.circle(roi, right_point_partner, 3, (0, 0, 255), 3)
+
+    def get_pendiente(x1, y1, x2, y2):
+        print(x1, y1, x2, y2)
+        if x2-x1 != 0:
+            return (y2-y1)/(x2-x1)
+        else:
+            return (y2-y1)
+    
+    def get_independiente(x1, y1, x2, y2):
+        
+        if x2-x1 != 0:
+            return (x1*(y1-y2))/(x2-x1) + y1
+        else:
+            return x1*(y1-y2) + y1
+    
+    left_m = get_pendiente(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
+    right_m = get_pendiente(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
+
+    left_n = get_independiente(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
+    right_n = get_independiente(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
+
+    corte_x = (left_n - right_n) / (right_m - left_m)
+    corte_y = left_m * corte_x + left_n
+
+    punto_corte = (int(corte_x), int(corte_y))
+    bottom_int = (int(bottom_center[0]), int(bottom_center[1]))
+
+    cv2.line(roi, punto_corte, bottom_int, (255, 255, 0), 3)
+    cv2.circle(roi, bottom_int, 3, (0, 0, 255), 3)
+
+    top_left_point = - left_n // left_m
+    bottom_left_point = ((h//2-20) - left_n) // left_m
+    top_right_point = - right_n // right_m
+    bottom_right_point = ((h//2-20) - right_n) // right_m
+    cv2.circle(roi, (int(top_left_point), 0), 3, (0, 0, 255), 3)
+    cv2.circle(roi, (int(bottom_left_point), h//2-20), 3, (0, 0, 255), 3)
+    cv2.line(roi, (int(top_left_point), 0), (int(bottom_left_point), h//2-20), (255, 255, 0), 3)
+    cv2.circle(roi, (int(top_right_point), 0), 3, (0, 0, 255), 3)
+    cv2.circle(roi, (int(bottom_right_point), h//2-20), 3, (0, 0, 255), 3)
+    cv2.line(roi, (int(top_right_point), 0), (int(bottom_right_point), h//2-20), (255, 255, 0), 3)
+
+    def get_incentro(punto_corte, punto_left, punto_right):
+
+        d_pc_left = [punto_left[0] - punto_corte[0], punto_left[1] - punto_corte[1]]
+        d_pc_left_module = np.linalg.norm(d_pc_left)
+        d_pc_right = [punto_right[0] - punto_corte[0], punto_right[1] - punto_corte[1]]
+        d_pc_right_module = np.linalg.norm(d_pc_right)
+        d_left_right = [punto_left[0] - punto_right[0], punto_left[1] - punto_right[1]]
+        d_left_right_module = np.linalg.norm(d_left_right)
+
+        sum_modules = d_pc_left_module + d_pc_right_module + d_left_right_module
+
+        x_i = (punto_corte[0]*d_left_right_module + punto_right[0]*d_pc_left_module + punto_left[0]*d_pc_right_module) / sum_modules
+        y_i = (punto_corte[1]*d_left_right_module + punto_right[1]*d_pc_left_module + punto_left[1]*d_pc_right_module) / sum_modules
+
+        return (x_i, y_i)
+    
+    incentro = get_incentro(punto_corte, left_point, right_point)
+    cv2.circle(roi, (int(incentro[0]), int(incentro[1])), 3, (255, 0, 255), 3)
+
+    bisectriz_m = get_pendiente(incentro[0], incentro[1], punto_corte[0], punto_corte[1])
+    bisectriz_n = get_independiente(incentro[0], incentro[1], punto_corte[0], punto_corte[1])
+    bottom_bisectriz = ((h//2-20) - bisectriz_n) // bisectriz_m
+    cv2.circle(roi, (int(bottom_bisectriz), h//2-20), 3, (0, 0, 255), 3)
+    cv2.line(roi, punto_corte, (int(bottom_bisectriz), h//2-20), (255, 0, 255), 3)
+
+
+    cv2.imshow("Hough", roi)
+    cv2.waitKey(0)
+
+    
+
+                
+
+
+
+
     
