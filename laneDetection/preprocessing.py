@@ -140,6 +140,13 @@ for c in range(1,12):
 
         return (x_i, y_i)
     
+    def get_baricentro(punto_corte, punto_left, punto_right):
+
+        x_i = (punto_corte[0] + punto_left[0] + punto_right[0]) / 3
+        y_i = (punto_corte[1] + punto_left[1] + punto_right[1]) / 3
+
+        return (x_i, y_i)
+    
     incentro = get_incentro(punto_corte, left_point, right_point)
     cv2.circle(roi, (int(incentro[0]), int(incentro[1])), 3, (255, 0, 255), 3)
 
@@ -148,6 +155,15 @@ for c in range(1,12):
     bottom_bisectriz = ((h//2-20) - bisectriz_n) // bisectriz_m
     cv2.circle(roi, (int(bottom_bisectriz), h//2-20), 3, (0, 0, 255), 3)
     cv2.line(roi, punto_corte, (int(bottom_bisectriz), h//2-20), (255, 0, 255), 3)
+
+    baricentro = get_baricentro(punto_corte, left_point, right_point)
+    cv2.circle(roi, (int(baricentro[0]), int(baricentro[1])), 3, (255, 0, 255), 3)
+
+    baritriz_m = get_pendiente(baricentro[0], baricentro[1], punto_corte[0], punto_corte[1])
+    baritriz_n = get_independiente(baricentro[0], baricentro[1], punto_corte[0], punto_corte[1])
+    bottom_baritriz = ((h//2-20) - baritriz_n) // baritriz_m
+    cv2.circle(roi, (int(bottom_baritriz), h//2-20), 3, (0, 0, 255), 3)
+    cv2.line(roi, punto_corte, (int(bottom_baritriz), h//2-20), (255, 150, 255), 3)
 
 
     cv2.imshow("Hough", roi)
