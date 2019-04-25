@@ -1,7 +1,7 @@
 from lane_marking import LaneMarking
 import cv2
 
-for c in range(1, 12):
+for c in range(1, 9):
     image = cv2.imread("./base_imagenes/bd_{}.jpg".format(c))
     # (h, w, d) = image.shape
     # roi = image[h//2:h-20, 0:w]
