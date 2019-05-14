@@ -120,6 +120,11 @@ class LaneMarking:
 
     '''
         Computes the median/bisection of two secant lines
+
+        Returns the distance between the center of the image and the bottom-most point
+        of the line that passes through both the intercenter and the baricenter.
+
+        Return: [distance_intercenter, distance_baricenter]
     '''
     def dissect_image(self, point_color=(255, 0, 0), line_color=(100, 255, 100)):
         assert self.left_m is not None and self.left_n is not None and \
@@ -144,6 +149,7 @@ class LaneMarking:
         # ----- INTERCENTER ----
         # We compute the intercenter of a triangle formed by the intersection point and two 
         # arbitrary points of each line
+        # Color: DARK PINK
         incenter = self.compute_incenter(intersection, self.bottom_left_point, self.bottom_right_point)
 
         cv2.circle(self.dissected_image, self.int_point(incenter), 3, point_color, 3)
@@ -156,6 +162,7 @@ class LaneMarking:
         # ----- BARICENTER ----
         # We compute the baricenter of a triangle form by the intersection point and two 
         # arbitrary points of each line
+        # Color: LIGHT PINK
         baricenter = self.compute_baricenter(intersection, self.bottom_left_point, self.bottom_right_point)
 
         cv2.circle(self.dissected_image, self.int_point(baricenter), 3, point_color, 3)
@@ -164,6 +171,12 @@ class LaneMarking:
         n = self.compute_independent(baricenter[0], baricenter[1], intersection[0], intersection[1])
         top_point_b, bottom_point_b = self.compute_line_drawing_points(m, n)
         cv2.line(self.dissected_image, top_point_b, bottom_point_b, (144, 130, 244), 3)
+
+        # ----- Distance to INTERCENTER -----
+        distance_i = self.compute_distance_points(self.bottom_center, bottom_point_i)
+        distance_b = self.compute_distance_points(self.bottom_center, bottom_point_b)
+
+        return (distance_i, distance_b)
 
     # Auxiliary Methods
 
@@ -308,11 +321,15 @@ class LaneMarking:
     def int_point(self, point):
         return (int(point[0]), int(point[1]))
 
+    '''
+        Computes the distance between two points
+    '''
+    def compute_distance_points(self, pointA, pointB):
+        res = None
+
+        if pointA and pointB:
+            vector = [pointB[0] - pointA[0], pointB[1] - pointA[1]]
+            res = np.linalg.norm(vector)
 
 
-      
-
-
-
-
-        
+        return res
