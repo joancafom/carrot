@@ -175,8 +175,8 @@ class LaneMarking:
         # ----- Distance to INTERCENTER -----
         distance_i = self.compute_distance_points(self.bottom_center, bottom_point_i)
         distance_b = self.compute_distance_points(self.bottom_center, bottom_point_b)
-        cv2.putText(self.dissected_image, "DISTANCE INTERCENTER: {}px".format(distance_i), (10, 35), cv2.FONT_HERSHEY_SIMPLEX, 1.25, (0, 255, 0),3)
-        cv2.putText(self.dissected_image, "DISTANCE BARICENTER: {}px".format(distance_b), (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 1.25, (255, 255, 0), 3)
+        cv2.putText(self.dissected_image, "DISTANCE BISECTION: {}px".format(distance_i), (10, 35), cv2.FONT_HERSHEY_COMPLEX, 1.5, (100, 255, 100),3, lineType=cv2.LINE_AA)
+        cv2.putText(self.dissected_image, "DISTANCE MEDIAN: {}px".format(distance_b), (10, 85), cv2.FONT_HERSHEY_COMPLEX, 1.5, (144, 130, 244), 3, lineType=cv2.LINE_AA)
 
         return (distance_i, distance_b)
 
