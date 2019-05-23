@@ -1,4 +1,4 @@
-Para la ejecución de este programa es necesario tener instalados los siguientes 
+﻿Para la ejecución de este programa es necesario tener instalados los siguientes 
 elementos en su sistema:
 
 - "Python" en su versión 3
@@ -11,8 +11,9 @@ se puede instalar fácilmente usando el gestor de paquetes mediante la instrucci
 
 Seguidamente, se deben realizar los siguientes pasos:
 
-	A.1 - En un intérprete de comandos, navegar hasta la actual carpeta.
+	A.1 - Abrir un intérprete de comandos como administrador y navegar hasta la actual carpeta.
 	A.2 - Ejecutar la instrucción "pip3 install -r requirements.txt", que
 	      instalará las dependencias necesarias.
-	A.3 - Ejecutar la instrucción "python3 window.py" para lanzar el programa
+	A.3 - Ejecutar la instrucción "python3 window.py" o, en su defecto, "python window.py" para 
+	      lanzar el programa.
 
