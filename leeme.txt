@@ -1,0 +1,18 @@
+Para la ejecución de este programa es necesario tener instalados los siguientes 
+elementos en su sistema:
+
+- "Python" en su versión 3
+- El gestor de paquetes "pip3", que se encargará de instalar las 
+dependencias necesarias.
+- El toolkit "tkinter" para crear GUIs. En la mayoría de instalaciones de Python
+en Windows y Unix ya viene preinstalado. En el caso de las distribuciones Debian, 
+se puede instalar fácilmente usando el gestor de paquetes mediante la instrucción
+"apt-get install python3-tk".
+
+Seguidamente, se deben realizar los siguientes pasos:
+
+	A.1 - En un intérprete de comandos, navegar hasta la actual carpeta.
+	A.2 - Ejecutar la instrucción "pip3 install -r requirements.txt", que
+	      instalará las dependencias necesarias.
+	A.3 - Ejecutar la instrucción "python3 window.py" para lanzar el programa
+
