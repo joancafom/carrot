@@ -105,14 +105,6 @@ def next_step():
         # Remove the next step button
         btn_next.pack_forget()
 
-        # Add a begin step by step button
-        btn_step = Button(root, text="Step by step", command=start_steps)
-        btn_step.pack(side="right", padx="10", pady="10")
-
-        # Add a final result button
-        btn_final = Button(root, text="Final result", command=final_result)
-        btn_final.pack(side="right", padx="10", pady="10")
-
 """
 Starts the step by step process with the first step,
 the grayscale image.
@@ -197,15 +189,6 @@ def select_image():
             panelL.image = image
             panelL.pack(side = "left", padx = "10", pady = "10")
 
-
-            # Add the step by step button
-            btn_step = Button(root, text = "Step by step", command = start_steps)
-            btn_step.pack(side = "right", padx = "10", pady = "10")
-
-            # Add the final result button
-            btn_final = Button(root, text = "Final result", command = final_result)
-            btn_final.pack(side = "right", padx = "10", pady = "10")
-
         else:
             # Replace the old study image with the new selected one
             panelL.configure(image = image)
@@ -218,7 +201,14 @@ def select_image():
             # Remove the next step button
             if btn_next is not None:
                 btn_next.pack_forget()
-                
+
+        # Add the step by step button
+        btn_step = Button(root, text = "Step by step", command = start_steps)
+        btn_step.pack(side = "right", padx = "10", pady = "10")
+
+        # Add the final result button
+        btn_final = Button(root, text = "Final result", command = final_result)
+        btn_final.pack(side = "right", padx = "10", pady = "10")   
 
 ######################################################################
 
