@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ Copyright 2014 The Android Open Source Project
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!--
+    "FrameLayout" está diseñado para bloquear un área de la pantalla
+    para mostrar un único elemento.
+
+    "xmlns:android"/"xmlns:tools" -> Se importan los xml NameSpaces android y tools.
+    "android:background" ->
+    "android:id" -> Nombre único para el elemento, que se puede usar para obtener una
+        referencia del mismo desde la aplicación.
+    "android:layout_height='match_parent'" -> El alto del grupo. Ajusta la dimensión para
+        que encaje con la del elemento padre.
+    "android:layout_width='match_parent'" -> El ancho del grupo. Ajusta la dimensión para
+        que encaje con la del elemento padre.
+
+    "tools:context" -> Declara que Actividad está asociada con este Layout por defecto.
+
+-->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:background="#000"
+    android:id="@+id/container"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+
+    tools:context="com.example.android.camera2video.CameraActivity" />
