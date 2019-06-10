@@ -26,6 +26,8 @@ const unsigned int S1 = 13;
 const unsigned int S2 = 11;
 const unsigned int S3 = 9;
 const unsigned int S4 = 7;
+
+const unsigned int actionDelay = 500;
  
 void setup() 
 {
@@ -55,7 +57,7 @@ void loop()
 
             // Izquierda
             digitalWrite(S2, HIGH);
-            delay(100);
+            delay(actionDelay);
             digitalWrite(S2, LOW);
           
          }
@@ -69,7 +71,7 @@ void loop()
 
             // Derecha
             digitalWrite(S3, HIGH);
-            delay(100);
+            delay(actionDelay);
             digitalWrite(S3, LOW);
           
          }
@@ -77,7 +79,7 @@ void loop()
 
             // Centro-Gas
             digitalWrite(S1, HIGH);
-            delay(100);
+            delay(actionDelay);
             digitalWrite(S1, LOW);
           
          }
@@ -85,7 +87,7 @@ void loop()
 
             // Freno
             digitalWrite(S4, HIGH);
-            delay(100);
+            delay(actionDelay);
             digitalWrite(S4, LOW);
           
          }

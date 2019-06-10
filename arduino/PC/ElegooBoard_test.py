@@ -3,7 +3,7 @@ import time
 
 if __name__ == "__main__":
     
-    instructions = [-1, 0, 1, 2, 3, 4, 5, None, 'A', 5.5]
+    instructions = [0, 1, 2, 3, 4, -1, 5.5, None, 5, 'A']
     i_to_str = ['Izquierda', 'Centro', 'Derecha', 'Centro-Gas', 'Freno']
 
     print("\n -- ELEGOOBOARD COMMUNICATION TESTER --\n")
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     print("\nCerrando la conexión")
     board.close()
 
-    print("¿Se ha cerrado la conexión?: {}".format(board.isOpen()))
+    print("¿Se ha cerrado la conexión?: {}".format(not board.isOpen()))

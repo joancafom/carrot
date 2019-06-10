@@ -78,7 +78,7 @@ class ElegooBoard:
 
         if self.board:
             
-            if action and type(action) is int and action >= 0 and action < 5:
+            if action is not None and type(action) is int and action >= 0 and action < 5:
                 self.board.write(str(action).encode())
                 print("Se ha enviado la acción {}".format(action))
             else:
