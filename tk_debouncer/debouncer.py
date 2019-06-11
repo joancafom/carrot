@@ -19,6 +19,7 @@ class Debouncer(object):
     def _key_released_timer_cb(self, event):
         ''' Called when the timer expires for a key up event, signifying that a
             key press has actually ended. '''
+        self.last_key = None      
         self.key_pressed = False
         self.released_cb(event)
 
@@ -28,7 +29,6 @@ class Debouncer(object):
         # If timer set by up is active, cancel it, because the press is still
         # active.
         
-        print(self.last_key)
         if self.key_released_timer and self.last_key is None or self.last_key == str(event.keysym):
             self.key_released_timer.cancel()
             self.key_released_timer = None
