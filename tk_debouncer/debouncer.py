@@ -5,7 +5,7 @@ SINGLE_PRESS_MAX_SECONDS = 0.05
 
 class Debouncer(object):
     ''' Debounces key events for Tkinter apps, so that press-and-hold works. '''
-    def __init__(self, pressed_cb, released_cb):
+    def __init__(self, pressed_cb, released_cb, nd_pressed_cb=None):
         self.key_pressed = False
         self.key_released_timer = None
 
@@ -15,7 +15,9 @@ class Debouncer(object):
         # Distinguish between different keys in order
         # to support for multiple keys
         self.last_key = None
-
+        
+        # Callback for non-debounced events
+        self.nd_pressed_cb = nd_pressed_cb
 
     def _key_released_timer_cb(self, event):
         ''' Called when the timer expires for a key up event, signifying that a
@@ -42,8 +44,11 @@ class Debouncer(object):
         if self.last_key is None or self.last_key != str(event.keysym):
             self.key_pressed = True
             self.pressed_cb(event)
-            
+
             self.last_key = str(event.keysym)
+        
+        if self.nd_pressed_cb:
+            self.nd_pressed_cb(event)
 
 
     def released(self, event):

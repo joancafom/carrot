@@ -27,7 +27,7 @@ const unsigned int S2 = 11;
 const unsigned int S3 = 9;
 const unsigned int S4 = 7;
 
-const unsigned int actionDelay = 500;
+const unsigned int actionDelay = 250;
  
 void setup() 
 {
