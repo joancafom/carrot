@@ -1,9 +1,7 @@
 from threading import Timer
 
-
 # How long a single key press lasts (as opposed to a press-and-hold).
 SINGLE_PRESS_MAX_SECONDS = 0.05
-
 
 class Debouncer(object):
     ''' Debounces key events for Tkinter apps, so that press-and-hold works. '''
@@ -13,13 +11,17 @@ class Debouncer(object):
 
         self.pressed_cb = pressed_cb
         self.released_cb = released_cb
+
+        # Distinguish between different keys in order
+        # to support for multiple keys
         self.last_key = None
 
 
     def _key_released_timer_cb(self, event):
         ''' Called when the timer expires for a key up event, signifying that a
             key press has actually ended. '''
-        self.last_key = None      
+        self.last_key = None
+
         self.key_pressed = False
         self.released_cb(event)
 
@@ -29,14 +31,18 @@ class Debouncer(object):
         # If timer set by up is active, cancel it, because the press is still
         # active.
         
+        # We only cancel it if the pressed event is fired by the same key
         if self.key_released_timer and self.last_key is None or self.last_key == str(event.keysym):
             self.key_released_timer.cancel()
             self.key_released_timer = None
         
         # If the key is not currently pressed, mark it so and call the callback.
+
+        # Only if the pressed event is fired by a key other than the last recorded one.
         if self.last_key is None or self.last_key != str(event.keysym):
             self.key_pressed = True
             self.pressed_cb(event)
+            
             self.last_key = str(event.keysym)
 
 
