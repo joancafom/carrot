@@ -24,16 +24,16 @@ class CarrotRecorder(object):
 
         # Send the command
         if event.keysym == 'Left':
-            #self.board.send_directions(0)
+            self.board.send_directions(0)
             print('Left')
         elif event.keysym == 'Right':
-            #self.board.send_directions(2)
+            self.board.send_directions(2)
             print('Right')
         elif event.keysym == 'Up':
-            #self.board.send_directions(3)
+            self.board.send_directions(3)
             print('Up')
         elif event.keysym == 'Down':
-            #self.board.send_directions(4)
+            self.board.send_directions(4)
             print('Down')
 
     def _pressed_cb(self, event):
