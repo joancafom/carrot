@@ -20,13 +20,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
-import android.hardware.Camera;
 import android.media.Image;
 import android.media.ImageReader;
 import android.support.v4.app.DialogFragment;
@@ -61,17 +57,11 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -104,8 +94,6 @@ public class Camera2VideoFragment extends Fragment
         Integers to Integers.
      */
 
-    private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
-    private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
 
@@ -116,7 +104,6 @@ public class Camera2VideoFragment extends Fragment
     /*
         "CAMERA" - Required to be able to access the camera device.
         "RECORD_AUDIO " - Allows an application to record audio.
-         TODO: Eliminar la grabación de audio, que no es útil en nuestro contexto.
      */
 
     private static final String[] VIDEO_PERMISSIONS = {
@@ -156,9 +143,6 @@ public class Camera2VideoFragment extends Fragment
     // An AutoFitTextureView for the camera preview.
     private AutoFitTextureView mTextureView;
 
-    // Button to record the video
-    private Button mButtonVideo;
-
     /*
         A reference to the opened CameraDevice.
 
@@ -166,6 +150,7 @@ public class Camera2VideoFragment extends Fragment
         device, allowing for fine-grain control of image capture and post-processing at high frame
         rates.
      */
+
     private CameraDevice mCameraDevice;
 
     /*
@@ -175,6 +160,7 @@ public class Camera2VideoFragment extends Fragment
         capturing images from the camera or reprocessing images captured from the camera in the same
         session previously.
      */
+
     private CameraCaptureSession mPreviewSession;
 
     /*
@@ -187,6 +173,7 @@ public class Camera2VideoFragment extends Fragment
         instance be a video or an OpenGL scene. The content stream can come from the application's
         process as well as a remote process.
      */
+
     private TextureView.SurfaceTextureListener mSurfaceTextureListener
             = new TextureView.SurfaceTextureListener() {
 
@@ -197,6 +184,7 @@ public class Camera2VideoFragment extends Fragment
             @param width - The width of the surface.
             @param height - The height of the surface.
          */
+
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
                                               int width, int height) {
@@ -209,6 +197,7 @@ public class Camera2VideoFragment extends Fragment
 
             @param surfaceTexture - The surface about to be destroyed.
          */
+
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
             return true;
@@ -221,6 +210,7 @@ public class Camera2VideoFragment extends Fragment
             @param width - The new width of the surface.
             @param height - The new height of the surface.
          */
+
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture,
                                                 int width, int height) {
@@ -233,6 +223,7 @@ public class Camera2VideoFragment extends Fragment
 
             @param surfaceTexture - The surface just updated.
          */
+
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
         }
@@ -247,10 +238,7 @@ public class Camera2VideoFragment extends Fragment
     private Size mVideoSize;
 
     // The "MediaRecorder" is used to record audio and video.
-    // TODO: Eliminar la grabación de audio, que no es útil en nuestro contexto.
     private MediaRecorder mMediaRecorder;
-    // Whether the app is recording video now
-    private boolean mIsRecordingVideo;
 
     /*
         "mBackgroundThread" is an additional thread for running tasks that shouldn't block the UI.
@@ -258,6 +246,7 @@ public class Camera2VideoFragment extends Fragment
         "HandlerThread" is a handy class for starting a new thread that has a looper. The looper can
         then be used to create handler classes. Note that start() must still be called.
      */
+
     private HandlerThread mBackgroundThread;
 
     /*
@@ -267,6 +256,7 @@ public class Camera2VideoFragment extends Fragment
         thread's MessageQueue. Each Handler instance is associated with a single thread an that
         thread's message queue.
      */
+
     private Handler mBackgroundHandler;
 
     /*
@@ -282,6 +272,7 @@ public class Camera2VideoFragment extends Fragment
         @constructor Semaphore(int permits) - Creates a Semaphore with the given number of permits
         and nonfair fairness setting.
      */
+
     private Semaphore mCameraOpenCloseLock = new Semaphore(1);
 
     /*
@@ -290,14 +281,15 @@ public class Camera2VideoFragment extends Fragment
         "CameraDevice.StateCallback" is a callback objects for receiving updates about the state of
         a camera device.
      */
-    private CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
 
+    private CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
 
         /*
             This method is called when a camera device is no longer available for use.
 
             @param cameraDevice - The device that has been disconnected.
          */
+
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             /*
@@ -308,12 +300,15 @@ public class Camera2VideoFragment extends Fragment
                 are trying to acquire a permit, then one is selected and given the permit that was
                 just released. That thread is (re)enabled for thread scheduling purposes.
              */
+
             mCameraOpenCloseLock.release();
+
             /*
                 CameraDevice public abstract void close()
 
                 Close the connection to this camera device as quickly as possible.
              */
+
             cameraDevice.close();
             mCameraDevice = null;
         }
@@ -324,8 +319,10 @@ public class Camera2VideoFragment extends Fragment
             @param cameraDevice - The device reporting the error.
             @param error - The error code.
          */
+
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int error) {
+
             /*
                 Semaphore public void release()
 
@@ -334,12 +331,15 @@ public class Camera2VideoFragment extends Fragment
                 are trying to acquire a permit, then one is selected and given the permit that was
                 just released. That thread is (re)enabled for thread scheduling purposes.
              */
+
             mCameraOpenCloseLock.release();
+
             /*
                 CameraDevice public abstract void close()
 
                 Close the connection to this camera device as quickly as possible.
              */
+
             cameraDevice.close();
             mCameraDevice = null;
 
@@ -347,13 +347,16 @@ public class Camera2VideoFragment extends Fragment
                 public final Activity getActivity()
                 - Return the Activity this fragment is currently associated with.
              */
+
             Activity activity = getActivity();
             if (null != activity) {
+
                 /*
                     public void finish()
                     - Call this when your activity is done and should be closed. The ActivityResult
                     is propagated back to whoever launched you via onActivityResult().
                  */
+
                 activity.finish();
             }
         }
@@ -363,10 +366,12 @@ public class Camera2VideoFragment extends Fragment
 
             @param cameraDevice - The camera device that has become opened.
          */
+
         @Override
         public void onOpened(@NonNull CameraDevice cameraDevice) {
             mCameraDevice = cameraDevice;
             startPreview();
+
             /*
                 Semaphore public void release()
 
@@ -375,6 +380,7 @@ public class Camera2VideoFragment extends Fragment
                 are trying to acquire a permit, then one is selected and given the permit that was
                 just released. That thread is (re)enabled for thread scheduling purposes.
              */
+
             mCameraOpenCloseLock.release();
 
             if (null != mTextureView) {
@@ -382,9 +388,6 @@ public class Camera2VideoFragment extends Fragment
             }
         }
     };
-
-    private Integer mSensorOrientation;
-    private String mNextVideoAbsolutePath;
 
     /*
         A "CaptureRequest.Builder" is a builder for capture requests.
@@ -395,17 +398,16 @@ public class Camera2VideoFragment extends Fragment
         pipeline, the control algorithms, and the output buffers. Also contains the list of target
         Surfaces to send image data to for this capture.
      */
+
     private CaptureRequest.Builder mPreviewBuilder;
     private ImageReader mImageReader;
 
     // ---------------------------------------------------------------------------------------------
 
     private Socket socket;
-    private static final int SERVERPORT = 447;
+    private static final int SERVER_PORT = 447;
     //private static final String SERVER_IP = "192.168.43.78";
     private static final String SERVER_IP = "192.168.0.18";
-
-    int[] mRgbBuffer;
 
     public static Camera2VideoFragment newInstance() {
         return new Camera2VideoFragment();
@@ -417,10 +419,8 @@ public class Camera2VideoFragment extends Fragment
 
         @param choices - The list of available sizes.
         @return The video size.
-
-        TODO: Cambiar el aspect ratio que vamos a utilizar.
-        TODO: Cambiar la resolución que vamos a utilizar.
      */
+
     private static Size chooseVideoSize(Size[] choices) {
         for (Size size : choices) {
             // Comprueba si los tamaños cumplen el ratio y resolución
@@ -517,7 +517,6 @@ public class Camera2VideoFragment extends Fragment
             getId(), or null if the ID is invalid (<0) or there is no matching view in the hierarchy.
          */
         mTextureView = view.findViewById(R.id.texture);
-        mButtonVideo = view.findViewById(R.id.video);
 
         /*
             (View) public void setOnClickListener(View.OnClickListener l)
@@ -526,7 +525,6 @@ public class Camera2VideoFragment extends Fragment
 
             @param l - The callback that will run.
          */
-        mButtonVideo.setOnClickListener(this);
         view.findViewById(R.id.info).setOnClickListener(this);
     }
 
@@ -582,19 +580,6 @@ public class Camera2VideoFragment extends Fragment
     public void onClick(View view) {
         // Comprobar en que Listener se ha hecho click.
         switch (view.getId()) {
-            // Se ha hecho click en el botón de vídeo
-            case R.id.video: {
-                // Si se está grabando
-                if (mIsRecordingVideo) {
-                    // Parar la grabación
-                    stopRecordingVideo();
-                // Si no se está grabando
-                } else {
-                    // Comenzar la grabación
-                    startRecordingVideo();
-                }
-                break;
-            }
             // Se ha hecho click en el botón de info
             case R.id.info: {
                 Activity activity = getActivity();
@@ -623,6 +608,7 @@ public class Camera2VideoFragment extends Fragment
         queue of the thread that is creating it - from that point on, it will deliver messages and
         runnables to that message queue and execute them as they come out of the message queue.
      */
+
     private void startBackgroundThread() {
         /*
             HandlerThread is a handy class for starting a new thread that has a looper. The looper
@@ -637,7 +623,9 @@ public class Camera2VideoFragment extends Fragment
         private void stopBackgroundThread()
         - Stops the background thread and its Handler.
      */
+
     private void stopBackgroundThread() {
+
         /*
             (HandlerThread) public boolean quitSafely()
             - Quits the handler thread's looper safely. Causes the handler thread's looper to
@@ -645,14 +633,17 @@ public class Camera2VideoFragment extends Fragment
             be delivered have been handled. Pending delayed messages with due times in the future
             will not be delivered.
          */
+
         mBackgroundThread.quitSafely();
         try {
+
             /*
                 (Handler) public final void join()
                 - Waits for this thread to die. Throws an InterruptedException if any thread has
                 interrupted the current thread. The interrupted status of the current thread is
                 cleared when this exception is thrown.
              */
+
             mBackgroundThread.join();
             mBackgroundThread = null;
             mBackgroundHandler = null;
@@ -668,6 +659,7 @@ public class Camera2VideoFragment extends Fragment
         @param permissions - The permissions your app wants to request.
         @return - Whether you can show permission rationale UI.
      */
+
     private boolean shouldShowRequestPermissionRationale(String[] permissions) {
         for (String permission : permissions) {
             /*
@@ -742,93 +734,6 @@ public class Camera2VideoFragment extends Fragment
         return true;
     }
 
-    private void getRGBIntFromPlanes(Image.Plane[] planes) {
-        ByteBuffer yPlane = planes[0].getBuffer();
-        ByteBuffer uPlane = planes[1].getBuffer();
-        ByteBuffer vPlane = planes[2].getBuffer();
-
-        int bufferIndex = 0;
-        final int total = yPlane.capacity();
-        final int uvCapacity = uPlane.capacity();
-        final int width = planes[0].getRowStride();
-
-        int yPos = 0;
-        for (int i = 0; i < mPreviewSize.getHeight(); i++) {
-            int uvPos = (i >> 1) * width;
-
-            for (int j = 0; j < width; j++) {
-                if (uvPos >= uvCapacity - 1) {
-                    break;
-                }
-                if (yPos >= total) {
-                    break;
-                }
-
-                final int y1 = yPlane.get(yPos++) & 0xff;
-                final int u = (uPlane.get(uvPos) & 0xff) - 128;
-                final int v = (vPlane.get(uvPos + 1) & 0xff) - 128;
-
-                if ((j & 1) == 1) {
-                    uvPos += 2;
-                }
-
-                final int y1192 = 1192 * y1;
-                int r = (y1192 + 1634 * v);
-                int g = (y1192 - 833 * v - 400 * u);
-                int b = (y1192 + 2066 * u);
-
-                r = (r < 0) ? 0 : ((r > 262143) ? 262143 : r);
-                g = (g < 0) ? 0 : ((g > 262143) ? 262143 : g);
-                b = (b < 0) ? 0 : ((b > 262143) ? 262143 : b);
-
-                mRgbBuffer[bufferIndex++] = ((r << 6) & 0xff0000) |
-                        ((g >> 2) & 0xff00) |
-                        ((b >> 10) & 0xff);
-            }
-        }
-    }
-
-    public static byte[] yuvImageToByteArray(Image image) {
-
-        assert(image.getFormat() == ImageFormat.YUV_420_888);
-
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        Image.Plane[] planes = image.getPlanes();
-        byte[] result = new byte[width * height * 3 / 2];
-
-        int stride = planes[0].getRowStride();
-        if (stride == width) {
-            planes[0].getBuffer().get(result, 0, width);
-        }
-        else {
-            for (int row = 0; row < height; row++) {
-                planes[0].getBuffer().position(row*stride);
-                planes[0].getBuffer().get(result, row*width, width);
-            }
-        }
-
-        stride = planes[1].getRowStride();
-        assert (stride == planes[2].getRowStride());
-        byte[] rowBytesCb = new byte[stride];
-        byte[] rowBytesCr = new byte[stride];
-
-        for (int row = 0; row < height/2; row++) {
-            int rowOffset = width*height + width/2 * row;
-            planes[1].getBuffer().position(row*stride);
-            planes[1].getBuffer().get(rowBytesCb, 0, width/2);
-            planes[2].getBuffer().position(row*stride);
-            planes[2].getBuffer().get(rowBytesCr, 0, width/2);
-
-            for (int col = 0; col < width/2; col++) {
-                result[rowOffset + col*2] = rowBytesCr[col];
-                result[rowOffset + col*2 + 1] = rowBytesCb[col];
-            }
-        }
-        return result;
-    }
-
     private static byte[] NV21toJPEG(byte[] nv21, int width, int height, int quality) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         YuvImage yuv = new YuvImage(nv21, ImageFormat.NV21, width, height, null);
@@ -901,41 +806,20 @@ public class Camera2VideoFragment extends Fragment
                 return;
             }
 
-            //final Image.Plane[] planes = image.getPlanes();
-            //final int total = planes[0].getRowStride() * mPreviewSize.getHeight();
-            //if (mRgbBuffer == null || mRgbBuffer.length < total) {
-            //    mRgbBuffer = new int[total];
-            //}
-
-            //getRGBIntFromPlanes(planes);
-
             byte[] data = NV21toJPEG(YUV420toNV21(image), image.getWidth(), image.getHeight(), 100);
 
-            // byte[] imgbyte = yuvImageToByteArray(image);
-            //Bitmap bmp=BitmapFactory.decodeByteArray(imgbyte,0,imgbyte.length);
-            //saveToInternalStorage(bmp);
             String imgString = Base64.encodeToString(data, Base64.NO_WRAP);
-
-
 
             try {
 
                 PrintWriter out = new PrintWriter(new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream())),
                         true);
-                //OutputStream output = socket.getOutputStream();
-                //output.write(imgbyte);
-                //out.println("-------------------------------------------");
+
                 out.print(imgString);
                 out.print("****");
-                //output.flush();
-                //out.write(imgbyte);
-                out.flush();
 
-                // Imagen a byte []
-                // OutputStream output = socket.getOutputStream();
-                // output.write(imgbyte);
-                // output.flush();
+                out.flush();
 
             } catch (Exception e) {
 
@@ -944,30 +828,6 @@ public class Camera2VideoFragment extends Fragment
             image.close();
         }
     };
-
-    private String saveToInternalStorage(Bitmap bitmapImage){
-        ContextWrapper cw = new ContextWrapper(getActivity());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,"profile.jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return directory.getAbsolutePath();
-    }
 
     /**
      * Tries to open a {@link CameraDevice}. The result is listened by `mStateCallback`.
@@ -995,7 +855,6 @@ public class Camera2VideoFragment extends Fragment
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
             if (map == null) {
                 throw new RuntimeException("Cannot get available preview/video sizes");
             }
@@ -1003,12 +862,8 @@ public class Camera2VideoFragment extends Fragment
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                     width, height, mVideoSize);
 
-
             mImageReader = ImageReader.newInstance(mVideoSize.getWidth(), mVideoSize.getHeight(), ImageFormat.YUV_420_888, 3);
             mImageReader.setOnImageAvailableListener(mImageAvailable, mBackgroundHandler);
-
-
-
 
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -1128,15 +983,19 @@ public class Camera2VideoFragment extends Fragment
      */
     private void configureTransform(int viewWidth, int viewHeight) {
         Activity activity = getActivity();
+
         if (null == mTextureView || null == mPreviewSize || null == activity) {
             return;
         }
+
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         Matrix matrix = new Matrix();
+
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
         float centerX = viewRect.centerX();
         float centerY = viewRect.centerY();
+
         if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
             bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY());
             matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
@@ -1146,100 +1005,8 @@ public class Camera2VideoFragment extends Fragment
             matrix.postScale(scale, scale, centerX, centerY);
             matrix.postRotate(90 * (rotation - 2), centerX, centerY);
         }
+
         mTextureView.setTransform(matrix);
-    }
-
-    private void setUpMediaRecorder() throws IOException {
-        final Activity activity = getActivity();
-        if (null == activity) {
-            return;
-        }
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
-            mNextVideoAbsolutePath = getVideoFilePath(getActivity());
-        }
-        mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoFrameRate(30);
-        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        switch (mSensorOrientation) {
-            case SENSOR_ORIENTATION_DEFAULT_DEGREES:
-                mMediaRecorder.setOrientationHint(DEFAULT_ORIENTATIONS.get(rotation));
-                break;
-            case SENSOR_ORIENTATION_INVERSE_DEGREES:
-                mMediaRecorder.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation));
-                break;
-        }
-        mMediaRecorder.prepare();
-    }
-
-    private String getVideoFilePath(Context context) {
-        final File dir = context.getExternalFilesDir(null);
-        return (dir == null ? "" : (dir.getAbsolutePath() + "/"))
-                + System.currentTimeMillis() + ".mp4";
-    }
-
-    private void startRecordingVideo() {
-        if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
-            return;
-        }
-        try {
-            closePreviewSession();
-            setUpMediaRecorder();
-            SurfaceTexture texture = mTextureView.getSurfaceTexture();
-            assert texture != null;
-            texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-            List<Surface> surfaces = new ArrayList<>();
-
-            // Set up Surface for the camera preview
-            Surface previewSurface = new Surface(texture);
-            surfaces.add(previewSurface);
-            mPreviewBuilder.addTarget(previewSurface);
-
-            // Set up Surface for the MediaRecorder
-            Surface recorderSurface = mMediaRecorder.getSurface();
-            surfaces.add(recorderSurface);
-            mPreviewBuilder.addTarget(recorderSurface);
-
-            // Start a capture session
-            // Once the session starts, we can update the UI and start recording
-            mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
-
-                @Override
-                public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    mPreviewSession = cameraCaptureSession;
-                    updatePreview();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // UI
-                            mButtonVideo.setText(R.string.stop);
-                            mIsRecordingVideo = true;
-
-                            // Start recording
-                            mMediaRecorder.start();
-                        }
-                    });
-                }
-
-                @Override
-                public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Activity activity = getActivity();
-                    if (null != activity) {
-                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }, mBackgroundHandler);
-        } catch (CameraAccessException | IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void closePreviewSession() {
@@ -1247,24 +1014,6 @@ public class Camera2VideoFragment extends Fragment
             mPreviewSession.close();
             mPreviewSession = null;
         }
-    }
-
-    private void stopRecordingVideo() {
-        // UI
-        mIsRecordingVideo = false;
-        mButtonVideo.setText(R.string.record);
-        // Stop recording
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
-
-        Activity activity = getActivity();
-        if (null != activity) {
-            Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath,
-                    Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Video saved: " + mNextVideoAbsolutePath);
-        }
-        mNextVideoAbsolutePath = null;
-        startPreview();
     }
 
     /**
@@ -1339,18 +1088,14 @@ public class Camera2VideoFragment extends Fragment
 
         @Override
         public void run() {
-
             try {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
-
-                socket = new Socket(serverAddr, SERVERPORT);
-
+                socket = new Socket(serverAddr, SERVER_PORT);
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-
         }
 
     }

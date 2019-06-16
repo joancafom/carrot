@@ -753,9 +753,8 @@ int id topPanel 0x7f070086
 int id uniform 0x7f070087
 int id up 0x7f070088
 int id useLogo 0x7f070089
-int id video 0x7f07008a
-int id withText 0x7f07008b
-int id wrap_content 0x7f07008c
+int id withText 0x7f07008a
+int id wrap_content 0x7f07008b
 int integer abc_config_activityDefaultDur 0x7f080000
 int integer abc_config_activityShortDur 0x7f080001
 int integer cancel_button_image_alpha 0x7f080002

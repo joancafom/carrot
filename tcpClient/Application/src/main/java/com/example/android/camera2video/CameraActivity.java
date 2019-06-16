@@ -19,11 +19,6 @@ package com.example.android.camera2video;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 /*
     "AppCompatActivity" -> Clase base para Activities que usan las funcionalidades
         de la action bar de la librería de soporte.
@@ -86,5 +81,4 @@ public class CameraActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
 }
