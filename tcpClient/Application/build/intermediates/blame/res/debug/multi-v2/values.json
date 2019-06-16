@@ -1,23 +1,23 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "outputFile": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\src\\main\\res\\values\\styles.xml",
+                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values\\strings.xml",
                     "from": {
-                        "startLines": "21",
-                        "startColumns": "4",
-                        "startOffsets": "744",
-                        "endColumns": "82",
-                        "endOffsets": "822"
+                        "startLines": "2,7,5,6,3,4",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,339,181,231,101,143",
+                        "endColumns": "45,82,49,107,41,37",
+                        "endOffsets": "96,417,226,334,138,176"
                     },
                     "to": {
-                        "startLines": "1369",
-                        "startColumns": "4",
-                        "startOffsets": "87730",
-                        "endColumns": "82",
-                        "endOffsets": "87808"
+                        "startLines": "269,271,272,283,284,287",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "17752,17848,17931,18266,18374,18540",
+                        "endColumns": "45,82,49,107,41,37",
+                        "endOffsets": "17793,17926,17976,18369,18411,18573"
                     }
                 },
                 {
@@ -38,43 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "2,7,5,6,3,4",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "55,339,181,231,101,143",
-                        "endColumns": "45,82,49,107,41,37",
-                        "endOffsets": "96,417,226,334,138,176"
-                    },
-                    "to": {
-                        "startLines": "269,271,272,283,284,287",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "17752,17848,17931,18266,18374,18540",
-                        "endColumns": "45,82,49,107,41,37",
-                        "endOffsets": "17793,17926,17976,18369,18411,18573"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\src\\main\\res\\values\\template-styles.xml",
-                    "from": {
-                        "startLines": "24,20,22,27,29,34",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "768,651,713,849,878,1075",
-                        "endLines": "24,20,22,27,32,39",
-                        "endColumns": "51,60,53,27,12,12",
-                        "endOffsets": "815,707,762,872,1069,1348"
-                    },
-                    "to": {
-                        "startLines": "293,1670,1671,1679,1776,1780",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "19020,110734,110794,111519,119255,119451",
-                        "endLines": "293,1670,1671,1679,1779,1785",
-                        "endColumns": "50,59,52,26,12,12",
-                        "endOffsets": "19066,110789,110842,111541,119446,119724"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\src\\main\\res\\values\\base-strings.xml",
+                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values\\base-strings.xml",
                     "from": {
                         "startLines": "18,19",
                         "startColumns": "4,4",
@@ -93,7 +57,43 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\src\\main\\res\\values\\template-dimens.xml",
+                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values\\template-styles.xml",
+                    "from": {
+                        "startLines": "24,20,22,27,29,34",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "768,651,713,849,878,1075",
+                        "endLines": "24,20,22,27,32,39",
+                        "endColumns": "51,60,53,27,12,12",
+                        "endOffsets": "815,707,762,872,1069,1348"
+                    },
+                    "to": {
+                        "startLines": "293,1670,1671,1679,1776,1780",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "19020,110734,110794,111519,119255,119451",
+                        "endLines": "293,1670,1671,1679,1779,1785",
+                        "endColumns": "50,59,52,26,12,12",
+                        "endOffsets": "19066,110789,110842,111541,119446,119724"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "21",
+                        "startColumns": "4",
+                        "startOffsets": "744",
+                        "endColumns": "82",
+                        "endOffsets": "822"
+                    },
+                    "to": {
+                        "startLines": "1369",
+                        "startColumns": "4",
+                        "startOffsets": "87730",
+                        "endColumns": "82",
+                        "endOffsets": "87808"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values\\template-dimens.xml",
                     "from": {
                         "startLines": "28,24,23,22,21,20,29",
                         "startColumns": "4,4,4,4,4,4,4",

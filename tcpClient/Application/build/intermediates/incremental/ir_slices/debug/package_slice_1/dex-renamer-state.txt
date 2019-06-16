@@ -1,4 +1,4 @@
-#Wed May 22 17:41:46 CEST 2019
-base.0=C\:\\Users\\Alicia\\Documents\\Estudios\\Universidad\\CUARTO CURSO\\TFG\\carrot_28_02\\android-Camera2Video-master\\Application\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+#Sat Jun 15 17:52:08 CEST 2019
+base.0=C\:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\build\\intermediates\\transforms\\dexMerger\\debug\\1
 path.0=classes.dex
 renamed.0=classes.dex
