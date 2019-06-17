@@ -424,7 +424,7 @@ public class Camera2VideoFragment extends Fragment
     private static Size chooseVideoSize(Size[] choices) {
         for (Size size : choices) {
             // Comprueba si los tamaños cumplen el ratio y resolución
-            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1080) {
+            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 320) {
                 return size;
             }
         }
