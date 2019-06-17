@@ -31,7 +31,10 @@ losses = [0]
 # ----- Train & Play sections ----- 
 
 def train(car, batch_size, num_epochs, update_freq, annealing_steps, 
-        max_num_episodes, pre_train_episodes, max_num_step, goal):
+        max_num_episodes, pre_train_episodes, max_num_step, goal, car_epsilon=None):
+
+    if car_epsilon:
+        car.epsilon = car_epsilon
 
     # We'll begin by acting complete randomly. As we gain experience and improve,
     # we will begin reducing the probability of acting randomly, and instead
@@ -136,7 +139,10 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
     car.save_models()
 
 
-def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
+def train_s(car, batch_size, num_epochs, update_freq, verbose=False, car_epsilon=None):
+
+    if car_epsilon:
+        car.epsilon = car_epsilon
 
     records_path = os.path.join(BASE_DIR, RECORD_MAIN_PATH)
     
@@ -354,6 +360,8 @@ if __name__ == "__main__":
         pre_train_episodes = 100
         # Episode's maximum length (we'll finish it if overpassed)
         max_num_step = 500
+        # Random ratio of the car at the start
+        epsilon_0 = car.epsilon_min
 
         # Training goal: If reached, the training will stop
         # and it will be considered as successful
@@ -361,7 +369,7 @@ if __name__ == "__main__":
 
         # Start the training
         train(car, batch_size, num_epochs, update_freq, annealing_steps, 
-        max_num_episodes, pre_train_episodes, max_num_step, goal)
+        max_num_episodes, pre_train_episodes, max_num_step, goal, car_epsilon=epsilon_0)
 
     elif 'p' == res or 'P' == res:
         print('***** Play *****\n')
@@ -399,8 +407,10 @@ if __name__ == "__main__":
         update_freq = 5
         # How many iterations over the set of recorded samples
         iterations = 30
+        # Random ratio of the car at the start
+        epsilon_0 = car.epsilon_min
 
         # Start the training
         for i in range(iterations):
             print('\n *** ITERATION {} OF {} *** \n'.format(i, iterations))
-            train_s(car, batch_size, num_epochs, update_freq, verbose=False)
+            train_s(car, batch_size, num_epochs, update_freq, verbose=False, car_epsilon=epsilon_0)
