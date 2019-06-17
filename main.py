@@ -357,7 +357,7 @@ if __name__ == "__main__":
         max_num_episodes = 10000
         # Number of episodes in which only random actions will be taken
         # it is usually done at the beginning
-        pre_train_episodes = 100
+        pre_train_episodes = 0
         # Episode's maximum length (we'll finish it if overpassed)
         max_num_step = 500
         # Random ratio of the car at the start
