@@ -400,14 +400,31 @@ public class Camera2VideoFragment extends Fragment
      */
 
     private CaptureRequest.Builder mPreviewBuilder;
+
+    /*
+        The "ImageReader" class allows direct application access to image date rendered into a
+        Surface.
+
+        The image data is encapsulated in Image objects.
+     */
+
     private ImageReader mImageReader;
 
-    // ---------------------------------------------------------------------------------------------
+    /*
+        The "Socket" class implements client sockets. A socket is an endpoint for communication
+        between two machines.
+     */
 
     private Socket socket;
-    private static final int SERVER_PORT = 447;
+
+    // IP of the server we are connecting to:
     //private static final String SERVER_IP = "192.168.43.78";
     private static final String SERVER_IP = "192.168.0.18";
+
+    // PORT of the server we are connecting to:
+    private static final int SERVER_PORT = 447;
+
+    // ---------------------------------------------------------------------------------------------
 
     public static Camera2VideoFragment newInstance() {
         return new Camera2VideoFragment();
@@ -415,7 +432,7 @@ public class Camera2VideoFragment extends Fragment
 
     /*
         In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes
-        larger than 1080p, since MediaRecorder cannot handle such a high-resolution video.
+        larger than 320p, since we need a really low resolution.
 
         @param choices - The list of available sizes.
         @return The video size.
@@ -702,6 +719,11 @@ public class Camera2VideoFragment extends Fragment
         }
     }
 
+    /*
+        Si no se concede alguno de los permisos que se piden, se muestra una notificación de error
+        que lo indica.
+     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -724,6 +746,10 @@ public class Camera2VideoFragment extends Fragment
         }
     }
 
+    /*
+        Devuelve si los permisos han sido concedidos o no.
+     */
+
     private boolean hasPermissionsGranted(String[] permissions) {
         for (String permission : permissions) {
             if (ActivityCompat.checkSelfPermission(getActivity(), permission)
@@ -734,14 +760,14 @@ public class Camera2VideoFragment extends Fragment
         return true;
     }
 
-    private static byte[] NV21toJPEG(byte[] nv21, int width, int height, int quality) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        YuvImage yuv = new YuvImage(nv21, ImageFormat.NV21, width, height, null);
-        yuv.compressToJpeg(new Rect(0, 0, width, height), quality, out);
-        return out.toByteArray();
-    }
+    /*
+        We need to convert the Image object to a Base64 JPEG image.
+     */
 
-    private static byte[] YUV420toNV21(Image image) {
+    private static String YUV420toJPEG(Image image) {
+
+        // Converting YUV420 to NV21
+
         Rect crop = image.getCropRect();
         int format = image.getFormat();
         int width = crop.width();
@@ -795,35 +821,93 @@ public class Camera2VideoFragment extends Fragment
                 }
             }
         }
-        return data;
+
+        // Converting NV21 to JPEG
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        YuvImage yuv = new YuvImage(data, ImageFormat.NV21, width, height, null);
+        yuv.compressToJpeg(new Rect(0, 0, width, height), 100, out);
+
+        // Return a Base64 string of the JPEG Image
+
+        String imgString = Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP);
+
+        return imgString;
     }
 
+    /*
+        "ImageReader.OnImageAvailableListener" is a callback interface for being notified that a new
+        image is available.
+
+        The "onImageAvailable" is called per image basis, callback fires for every new frame available
+        from ImageReader.
+     */
+
     ImageReader.OnImageAvailableListener mImageAvailable = new ImageReader.OnImageAvailableListener() {
+
         @Override
         public void onImageAvailable(ImageReader reader) {
+
+            // Obtención de la imagen
+
+            /*
+                The "acquireLatestImage()" method acquires the latest Image from the ImageReader's
+                queue, dropping older Image.
+             */
+
             Image image = reader.acquireLatestImage();
+
             if (image == null) {
                 return;
             }
 
-            byte[] data = NV21toJPEG(YUV420toNV21(image), image.getWidth(), image.getHeight(), 100);
+            // Conversión de la imagen
 
-            String imgString = Base64.encodeToString(data, Base64.NO_WRAP);
+            String imgString = YUV420toJPEG(image);
+
+            // Envío de la imagen
 
             try {
+
+                /*
+                    "PrintWriter" prints formatted representations of objects to a text-output
+                    stream.
+
+                    "BufferedWriter" writes text to a character-output stream, buffering characters
+                    so as to provide for the efficient writing of single characters, arrays, and
+                    strings.
+
+                    In general, a Writer sends its output immediately to the underlying character or
+                    byte stream. It is advisable to wrap a BufferedWriter around any Writer whose
+                    write() operations may be costly, such as OutputStreamWriters.
+
+                    The "OutputStream" class is the superclass of all classes representing an output
+                    stream of bytes. An out stream accepts output bytes and sends them to some sink.
+                 */
 
                 PrintWriter out = new PrintWriter(new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream())),
                         true);
 
+                /*
+                    The method "print(String s)" prints a string. The string's characters are
+                    converted into bytes according to the platform's default character enconding,
+                    and these bytes are written in exactly the manner of the write(int) method.
+                 */
+
                 out.print(imgString);
-                out.print("****");
+                out.print("*");
 
                 out.flush();
 
             } catch (Exception e) {
 
             }
+
+            /*
+                The method "close()" frees up the frame for reuse.
+             */
 
             image.close();
         }
@@ -835,14 +919,18 @@ public class Camera2VideoFragment extends Fragment
     @SuppressWarnings("MissingPermission")
     private void openCamera(int width, int height) {
         new Thread(new ClientThread()).start();
+
+        // Si no se tienen los permisos, se piden
         if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
             requestVideoPermissions();
             return;
         }
+
         final Activity activity = getActivity();
         if (null == activity || activity.isFinishing()) {
             return;
         }
+
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             Log.d(TAG, "tryAcquire");
@@ -1032,6 +1120,8 @@ public class Camera2VideoFragment extends Fragment
 
     public static class ErrorDialog extends DialogFragment {
 
+        // Métodos que muestran un diálogo de error
+
         private static final String ARG_MESSAGE = "message";
 
         public static ErrorDialog newInstance(String message) {
@@ -1060,6 +1150,8 @@ public class Camera2VideoFragment extends Fragment
 
     public static class ConfirmationDialog extends DialogFragment {
 
+        // Método que muestra un diálogo de confirmación para aceptar los permisos de grabación.
+
         @Override
         public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
             final Fragment parent = getParentFragment();
@@ -1084,13 +1176,40 @@ public class Camera2VideoFragment extends Fragment
 
     }
 
+    /*
+        The "Runnable" interface should be implemented by any class whose instances are intended to
+        be executed by a thread. The class must define a method of no arguments called "run()".
+     */
+
     class ClientThread implements Runnable {
+
+        /*
+            When an object implementing interface "Runnable" is used to create a thread, starting
+            the thread causes the object's "run()" method to be called in that separately executing
+            thread.
+         */
 
         @Override
         public void run() {
             try {
+
+                /*
+                    The "InetAddress" class represents an Internet Protocol (IP) address.
+
+                    The "getByName(String host)" method determines the IP address of a host, given
+                    the host's name.
+
+                    The "Socket" class implements client sockets. A socket is an endpoint for
+                    communication between two machines.
+
+                    The constructor "public Socket(InetAddress address, int port)" creates a stream
+                    socket and connects it to the specified port number at the specified IP address.
+
+                 */
+
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVER_PORT);
+
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
             } catch (IOException e1) {

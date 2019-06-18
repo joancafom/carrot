@@ -8,58 +8,69 @@ from io import BytesIO
 import socket
 import base64
 
+#---------------------- CONSTANTES ----------------------
+
 TCP_IP = '192.168.0.18'
 #TCP_IP = '192.168.43.78'
 TCP_PORT = 447
 BUFFER_SIZE = 300000
- 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((TCP_IP, TCP_PORT))
-s.listen(1)
-print('Listening on {}:{}'.format(TCP_IP, TCP_PORT))
- 
-conn, addr = s.accept()
-print('Accepted connection from:', addr)
 
-#file_completo = open("completo.txt", "w")
-#file_1 = open("primero.txt", "w")
-  
-while 1:
+#--------------------------------------------------------
 
-    try:
-        data_recv = conn.recv(BUFFER_SIZE)
-        data_decoded = data_recv.decode()
+def tcp_server():
+    
+    # Socket initialization
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((TCP_IP, TCP_PORT))
 
-        #file_completo.write(data_decoded)
+    # We only want one connection
+    s.listen(1)
 
-        data_splited = data_decoded.split('****')
-        data_1 = data_splited[1]
-        #file_1.write(data_1)
-        #print(data_1)
-        
-        if not data_recv: 
-            break
+    print('Listening on {}:{}'.format(TCP_IP, TCP_PORT))
+    
+    # The server starts listening
+    conn, addr = s.accept()
 
-        sbuf = BytesIO()
-        data_image = base64.b64decode(data_1)
-        sbuf.write(data_image)
+    print('Accepted connection from:', addr)
+    
+    # Loop to process all the data received
+    while 1:
 
-        pimg = Image.open(sbuf)
+        try:
+            # We receive a message
+            data_recv = conn.recv(BUFFER_SIZE)
+            data_decoded = data_recv.decode()
 
-        # Conversion from PIL to OpenCV
-        opencvImage = np.array(pimg)
+            # Then split the images
+            data_splited = data_decoded.split('*')
+            # And get the second one
+            data_1 = data_splited[1]
+            
+            # Break if we don't receive anything
+            if not data_recv: 
+                break
 
-        # Display the OpenCV image
-        cv2.imshow('Demo Image',opencvImage)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+            sbuf = BytesIO()
+            data_image = base64.b64decode(data_1)
+            sbuf.write(data_image)
 
-        # Display the PIL image
-        #pimg.show()
-        
-    except:
-        continue
+            pimg = Image.open(sbuf)
 
-conn.close()
-#file_completo.close()
-#file_1.close()
+            # Conversion from PIL to OpenCV
+            opencvImage = np.array(pimg)
+
+            # Display the OpenCV image
+            cv2.imshow('Demo Image',opencvImage)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+            # Display the PIL image
+            #pimg.show()
+            
+        except:
+            continue
+
+    conn.close()
+
+if __name__ == '__main__':
+    tcp_server()
