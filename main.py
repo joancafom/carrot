@@ -12,6 +12,9 @@ from open_gameplays import open_episode
 from car_agent import CarAgent
 from experience_replay import ExperienceReplay
 
+from tcpServer import *
+import threading
+
 # Initialize the CarRacing environment
 env = gym.make('CarRacing-v0')
 
@@ -33,6 +36,16 @@ losses = [0]
 def train(car, batch_size, num_epochs, update_freq, annealing_steps, 
         max_num_episodes, pre_train_episodes, max_num_step, goal):
 
+    # Open a new thread with the TCP Server to obtain the current state image
+    try:
+        threads=[]
+        t = threading.Thread(target=tcp_server)
+        threads.append(t)
+        t.start()
+    
+    except Exception as e:
+        print(e)
+
     # We'll begin by acting complete randomly. As we gain experience and improve,
     # we will begin reducing the probability of acting randomly, and instead
     # take the actions that our Q network suggests
@@ -41,14 +54,23 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
     num_episode = 0
     while num_episode < max_num_episodes:
 
+        # If we are in the first episode we need some time to start the camera
+        # app. We stop the execution until we open the app and the tcp server
+        # gets the first image. Then we can press any key to continue the
+        # execution
+        if num_episode == 0:
+            input("Press any key to continue...")
+
         # Create an experience replay buffer for the current episode
         episode_buffer = ExperienceReplay(buffer_size=max_num_step)
 
         # Get the game state from the environment
-        state = env.reset()
+        state = env.reset() # Old code?
+        state = car_env.get_state() # New code
+
         # Solves the bug that prevents gym from rendering
         # in 'state_pixels' mode
-        env.env.viewer.window.dispatch_events()
+        #env.env.viewer.window.dispatch_events() # Old code
 
         # Process the state as a stack of three images
         stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
@@ -67,13 +89,15 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
         while cur_step < max_num_step and not done:
 
             cur_step += 1
-            env.render(mode='state_pixels')
+            #env.render(mode='state_pixels') # Old code
 
             # Get the action to perform for the state
             action = car.get_action(state, is_random=(num_episode < pre_train_episodes))
 
             # Perform the action and retrieve the next state, reward and done
-            next_state, reward, done, _ = env.step(convert_action_to_gym(action))
+            next_state, reward, done, _ = env.step(convert_action_to_gym(action)) # Old code
+            #TODO: New step method code
+            next_state = car_env.get_state() # New code
 
             # Process the state as a stack of three images
             next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
