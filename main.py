@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from aux import convert_action_to_gym, export_image, stack_frames
+from aux import convert_action_to_gym, export_image, stack_frames, step
 from record_gameplay import RECORD_MAIN_PATH, BASE_DIR
 from open_gameplays import open_episode
 
@@ -14,6 +14,8 @@ from experience_replay import ExperienceReplay
 
 from tcpServer import *
 import threading
+
+from gym.envs.box2d import CarRacing
 
 # Initialize the CarRacing environment
 env = gym.make('CarRacing-v0')
@@ -95,9 +97,10 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
             action = car.get_action(state, is_random=(num_episode < pre_train_episodes))
 
             # Perform the action and retrieve the next state, reward and done
-            next_state, reward, done, _ = env.step(convert_action_to_gym(action)) # Old code
-            #TODO: New step method code
-            next_state = car_env.get_state() # New code
+            #next_state, reward, done, _ = env.step(convert_action_to_gym(action)) # Old code
+
+            #DONE: New step method code
+            next_state, reward, done = step(convert_action_to_gym(action))
 
             # Process the state as a stack of three images
             next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)
