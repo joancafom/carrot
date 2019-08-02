@@ -1,8 +1,45 @@
 import numpy as np
 from PIL import Image
 from collections import deque
+from lanes.RoadImage import RoadImage
 
+# ------- Step function --------
 
+ACTION_MEMORY_MAX = 5
+MIDLANE_PX = 100
+
+action_memory = deque([], maxlen=ACTION_MEMORY_MAX)
+
+def step(action):
+
+    step_reward = 0
+    done = False
+    
+    # The car performs the action
+    board.send_directions(int(action))
+    time.sleep(0.25)
+
+    state = car_env.get_state()
+
+    # We add the action we just performed to the action memory array
+    action_memory.append(int(action))
+
+    # If the car is not moving
+    if 3 not in action_memory:
+        step_reward -= 0.1
+
+    ri = RoadImage(action)
+    midlane_distance = ri.center_offset()
+
+    if midlane_distance > MIDLANE_PX:
+        done = True
+        step_reward = -100
+    
+    else:
+        norm_distance = midlane_distance / MIDLANE_PX
+        step_reward += 5 * (1 - norm_distance)
+
+    return state, step_reward, done
 
 # ----- Actions conversion -----
 
