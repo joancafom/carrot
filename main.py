@@ -100,7 +100,8 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
             #next_state, reward, done, _ = env.step(convert_action_to_gym(action)) # Old code
 
             #DONE: New step method code
-            next_state, reward, done = step(convert_action_to_gym(action))
+            next_state, reward, done = step(action)
+            print("NS: {}, reward: {}, done: {}".format(next_state, reward, done))
 
             # Process the state as a stack of three images
             next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)

@@ -112,7 +112,7 @@ def tcp_server():
                     s_image = ""
                     # Save current state
                     car_env.set_state(roi)
-                    print('new')
+                    #print('new')
 
                     # Display the PIL image
                     #pimg.show()

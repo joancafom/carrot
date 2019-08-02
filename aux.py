@@ -3,12 +3,19 @@ from PIL import Image
 from collections import deque
 from lanes.RoadImage import RoadImage
 
+import time
+from tcpServer import tcp_server, car_env
+from arduino.PC.ElegooBoard import ElegooBoard
+
 # ------- Step function --------
 
 ACTION_MEMORY_MAX = 5
 MIDLANE_PX = 100
 
 action_memory = deque([], maxlen=ACTION_MEMORY_MAX)
+board = ElegooBoard()
+board.open()
+
 
 def step(action):
 
@@ -16,6 +23,7 @@ def step(action):
     done = False
     
     # The car performs the action
+
     board.send_directions(int(action))
     time.sleep(0.25)
 
@@ -28,7 +36,7 @@ def step(action):
     if 3 not in action_memory:
         step_reward -= 0.1
 
-    ri = RoadImage(action)
+    ri = RoadImage(state)
     midlane_distance = ri.center_offset()
 
     if midlane_distance > MIDLANE_PX:
