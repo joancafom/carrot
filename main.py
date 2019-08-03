@@ -5,17 +5,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from aux import convert_action_to_gym, export_image, stack_frames, step
+from aux import convert_action_to_gym, export_image, stack_frames, live_step
 from record_gameplay import RECORD_MAIN_PATH, BASE_DIR
 from open_gameplays import open_episode
 
 from car_agent import CarAgent
 from experience_replay import ExperienceReplay
 
-from tcpServer import *
 import threading
+import sys
+from tcpServer import tcp_server, car_env
 
-from gym.envs.box2d import CarRacing
+#from gym.envs.box2d import CarRacing
 
 # Initialize the CarRacing environment
 env = gym.make('CarRacing-v0')
@@ -40,13 +41,21 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
 
     # Open a new thread with the TCP Server to obtain the current state image
     try:
-        threads=[]
+
         t = threading.Thread(target=tcp_server)
-        threads.append(t)
         t.start()
     
     except Exception as e:
+        print("\n\n FATAL: Could not start TCP Server. Exiting \n\n")
         print(e)
+        sys.exit()
+    
+
+    # In the first episode we need some time to start the camera
+    # app. We stop the execution until we open the app and the tcp server
+    # gets the first image. Then we can press any key to continue the
+    # execution
+    input(" Waiting for the client to connect. Press any key to continue...")
 
     # We'll begin by acting complete randomly. As we gain experience and improve,
     # we will begin reducing the probability of acting randomly, and instead
@@ -56,23 +65,11 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
     num_episode = 0
     while num_episode < max_num_episodes:
 
-        # If we are in the first episode we need some time to start the camera
-        # app. We stop the execution until we open the app and the tcp server
-        # gets the first image. Then we can press any key to continue the
-        # execution
-        if num_episode == 0:
-            input("Press any key to continue...")
-
         # Create an experience replay buffer for the current episode
         episode_buffer = ExperienceReplay(buffer_size=max_num_step)
 
-        # Get the game state from the environment
-        state = env.reset() # Old code?
+        # Take an image of the road
         state = car_env.get_state() # New code
-
-        # Solves the bug that prevents gym from rendering
-        # in 'state_pixels' mode
-        #env.env.viewer.window.dispatch_events() # Old code
 
         # Process the state as a stack of three images
         stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
@@ -91,16 +88,12 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
         while cur_step < max_num_step and not done:
 
             cur_step += 1
-            #env.render(mode='state_pixels') # Old code
 
             # Get the action to perform for the state
             action = car.get_action(state, is_random=(num_episode < pre_train_episodes))
 
             # Perform the action and retrieve the next state, reward and done
-            #next_state, reward, done, _ = env.step(convert_action_to_gym(action)) # Old code
-
-            #DONE: New step method code
-            next_state, reward, done = step(action)
+            next_state, reward, done = live_step(action)
             print("NS: {}, reward: {}, done: {}".format(next_state, reward, done))
 
             # Process the state as a stack of three images

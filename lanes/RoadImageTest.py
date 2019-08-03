@@ -4,8 +4,9 @@ from RoadImage import RoadImage
 import datetime
 
 if __name__ == "__main__":
+
     # Load an color image in grayscale
-    img = cv2.imread('/Users/joseantonio/Documents/GitHub/carrot/lanes/bd_2.jpg', -1)
+    img = cv2.imread('/home/tfg/Escritorio/ROI4.png', -1)
     
     ri = RoadImage(img)
     
@@ -14,6 +15,10 @@ if __name__ == "__main__":
     last_point = None
     
     for p in points:
+
+        if p is None:
+            continue
+
         p_int = tuple([int(x) for x in p])
         print(p_int)
         cv2.circle(raw_image, p_int, 5, (255,0,0), 5)  

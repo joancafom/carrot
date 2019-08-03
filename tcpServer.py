@@ -1,8 +1,10 @@
 from PIL import Image
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 import numpy as np
 import cv2
+
 import io
 from io import BytesIO
 import socket
@@ -32,6 +34,7 @@ BUFFER_SIZE = 300000
 
 #--------------------------------------------------------
 
+#-------------------- THREAD FUNCTION -------------------
 def tcp_server():
     
     # Socket initialization
@@ -110,9 +113,10 @@ def tcp_server():
                     cv2.waitKey(1)
 
                     s_image = ""
-                    # Save current state
-                    car_env.set_state(roi)
-                    #print('new')
+
+                    # Ensure validity before saving the state
+                    if roi.shape == (133, 200, 3):
+                        car_env.set_state(roi)
 
                     # Display the PIL image
                     #pimg.show()
@@ -122,6 +126,8 @@ def tcp_server():
             continue
 
     conn.close()
+
+#--------------------------------------------------------
 
 if __name__ == '__main__':
     tcp_server()

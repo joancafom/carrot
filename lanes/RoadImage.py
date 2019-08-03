@@ -5,7 +5,6 @@ import numpy as np
 Class that process & analyses the raw image
 received from the Android device wirelessly.
 
-Both lanes must be visible in the image.
 """
 
 class RoadImage:
@@ -52,17 +51,20 @@ class RoadImage:
     resulting from the application of the Hough Transform
     have been drawn
     '''
-    def get_hough(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=70, hough_minLineLength=5, 
+    def get_hough(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=45, hough_minLineLength=5, 
     hough_maxLineGap=10):
         hough_image = self.get_image()
 
         hough_lines = cv2.HoughLinesP(self.get_edged(), hough_rho_resolution, hough_thetha_resolution, 
         hough_threshold_votes, minLineLength=hough_minLineLength, maxLineGap=hough_maxLineGap)
 
-        # Draw lines found by Hough
-        for line in hough_lines:
-            x1, y1, x2, y2 = line[0]
-            cv2.line(hough_image, (x1, y1), (x2, y2), (255, 0, 0), 3)
+        if hough_lines is not None:
+            # Draw lines found by Hough
+            for line in hough_lines:
+                x1, y1, x2, y2 = line[0]
+                cv2.line(hough_image, (x1, y1), (x2, y2), (255, 0, 0), 3)
+        else:
+            print("WARNING! No HoughLines were detected!")
 
         return hough_image
 
@@ -80,7 +82,7 @@ class RoadImage:
     Returns: (Bottom point of left lane, Intersection point, Bottom point of right lane,
     Position of the car (Bottom center of the photo), Midpoint of the lane)
     '''
-    def analyse(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=70, hough_minLineLength=5, 
+    def analyse(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=45, hough_minLineLength=5, 
     hough_maxLineGap=10):
 
         print("Watch out for image size! Less pixels means less votes")
@@ -89,17 +91,35 @@ class RoadImage:
         hough_lines = cv2.HoughLinesP(self.get_edged(), hough_rho_resolution, hough_thetha_resolution, 
             hough_threshold_votes, minLineLength=hough_minLineLength, maxLineGap=hough_maxLineGap)
 
+        if hough_lines is None:
+            print("WARNING! No HoughLines were detected!")
+            return (None, None, None, None, None)
+
         # STEP 2: Figure out where the lanes are 
         ((left_point, left_point_partner), (right_point, right_point_partner)) = self._compute_nearest_lanes(hough_lines)
 
         # STEP 3: Extend lanes lines so they take up the whole image
 
-        # Compute the parameters that characterize both lines (the slope and the independent term)
-        left_m = self.compute_slope(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
-        right_m = self.compute_slope(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
 
-        left_n = self.compute_independent(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
-        right_n = self.compute_independent(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
+        # Compute the parameters that characterize both lines (the slope and the independent term)
+        if left_point is not None:
+            left_m = self.compute_slope(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
+            left_n = self.compute_independent(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
+        else:
+            # Left lane does not appear in the photo, we replace it by means of using an approximation
+            print("Left lane was not identified correctly...")
+            left_m = self.compute_slope(np.float64(0), np.float64(1), np.float64(0), np.float64(132))
+            left_n = self.compute_independent(np.float64(0), np.float64(1), np.float64(0), np.float64(132))
+        
+        if right_point is not None:
+            right_m = self.compute_slope(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
+            right_n = self.compute_independent(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
+        else:
+            # Right lane does not appear in the photo, we replace it by means of using an approximation
+            print("Right lane was not identified correctly...")
+            right_m = self.compute_slope(np.float64(199), np.float64(1), np.float64(199), np.float64(132))
+            right_n = self.compute_independent(np.float64(199), np.float64(1), np.float64(199), np.float64(132))
+
 
         # Left Lane Line's Points: The upper-most and bottom-most points corresponding 
         # to the line, in order to draw it
@@ -142,9 +162,6 @@ class RoadImage:
     of the lane
     '''
     def center_offset(self):
-        assert self.bottom_center is not None
-        assert self.bisection_bottom is not None
-
         return self.compute_distance_points(self.bottom_center, self.bisection_bottom)
     
     ###### AUXILIARY METHODS #####
@@ -169,6 +186,9 @@ class RoadImage:
 
         # Iterate through all points in the image to 
         # get the 2 bottom-most left and right points
+
+        # Don't need to check for hough_lines as this function
+        # won't be called if it were invalid.
         for line in hough_lines:
             x1, y1, x2, y2 = line[0]
         

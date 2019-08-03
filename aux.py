@@ -17,7 +17,7 @@ board = ElegooBoard()
 board.open()
 
 
-def step(action):
+def live_step(action):
 
     step_reward = 0
     done = False
