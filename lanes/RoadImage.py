@@ -39,8 +39,14 @@ class RoadImage:
     def get_grayscale(self):
         return cv2.cvtColor(self.get_image(), cv2.COLOR_BGR2GRAY)
     
+    def get_clahe(self):
+        return cv2.createCLAHE(clipLimit=4.0, tileGridSize=(8,8)).apply(self.get_grayscale())
+    
+    def get_gamma(self):
+        return cv2.LUT(self.get_clahe(), np.array([((i / 255.0) ** 0.5) * 255 for i in np.arange(0, 256)]).astype("uint8"))
+    
     def get_binarized(self, binarize_threshold=120, binarize_maxval=255):
-        return cv2.threshold(self.get_grayscale(), binarize_threshold, binarize_maxval, cv2.THRESH_BINARY)[1]
+        return cv2.threshold(self.get_gamma(), binarize_threshold, binarize_maxval, cv2.THRESH_BINARY)[1]
     
     def get_edged(self, canny_lower_threshold=50, canny_upper_threshold=150):
         return cv2.Canny(self.get_binarized(), canny_lower_threshold, canny_upper_threshold)
