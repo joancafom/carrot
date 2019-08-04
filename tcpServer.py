@@ -81,7 +81,7 @@ def tcp_server():
                     # Fix width to 200px
                     (h, w, d) = opencvImage.shape
                     r = 200.0 / float(h)
-                    dim = (int(w * r), 200)
+                    dim = (268, 200)
                     resizedI = cv2.resize(opencvImage, dim)
 
                     # Rotate the image
@@ -105,18 +105,16 @@ def tcp_server():
 
                     # perform the actual rotation and return the image
                     rotated90 = cv2.warpAffine(resizedI, M, (nW, nH))
-                    cv2.imshow("rotated", rotated90)
+                    #cv2.imshow("rotated", rotated90)
 
                     # Crop image so its witdh is 200px and its height is 134px
                     roi = rotated90[nH//2:(nH//2)+134, 0:200]
-                    cv2.imshow("ROI", roi)
-                    cv2.waitKey(1)
+                    #cv2.imshow("ROI", roi)
+                    #cv2.waitKey(1)
 
                     s_image = ""
 
-                    # Ensure validity before saving the state
-                    if roi.shape == (133, 200, 3):
-                        car_env.set_state(roi)
+                    car_env.set_state(roi)
 
                     # Display the PIL image
                     #pimg.show()

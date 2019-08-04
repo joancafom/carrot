@@ -57,9 +57,9 @@ class RoadImage:
     resulting from the application of the Hough Transform
     have been drawn
     '''
-    def get_hough(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=45, hough_minLineLength=5, 
+    def get_hough(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=30, hough_minLineLength=5, 
     hough_maxLineGap=10):
-        hough_image = self.get_image()
+        hough_image = self.get_image().copy()
 
         hough_lines = cv2.HoughLinesP(self.get_edged(), hough_rho_resolution, hough_thetha_resolution, 
         hough_threshold_votes, minLineLength=hough_minLineLength, maxLineGap=hough_maxLineGap)
@@ -88,7 +88,7 @@ class RoadImage:
     Returns: (Bottom point of left lane, Intersection point, Bottom point of right lane,
     Position of the car (Bottom center of the photo), Midpoint of the lane)
     '''
-    def analyse(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=45, hough_minLineLength=5, 
+    def analyse(self, hough_rho_resolution=1, hough_thetha_resolution=np.pi/100, hough_threshold_votes=30, hough_minLineLength=5, 
     hough_maxLineGap=10):
 
         print("Watch out for image size! Less pixels means less votes")

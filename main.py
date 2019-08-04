@@ -5,17 +5,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from aux import convert_action_to_gym, export_image, stack_frames, live_step
+from aux import convert_action_to_gym, export_image, stack_frames
 from record_gameplay import RECORD_MAIN_PATH, BASE_DIR
 from open_gameplays import open_episode
 
 from car_agent import CarAgent
 from experience_replay import ExperienceReplay
 
-import threading
-import sys
-from tcpServer import tcp_server, car_env
-
+from RDCentre import RDCentre
 #from gym.envs.box2d import CarRacing
 
 # Initialize the CarRacing environment
@@ -32,7 +29,7 @@ save_every = 5
 # Tracks training losses
 losses = [0]
 
-
+rdCentre = RDCentre()
 
 # ----- Train & Play sections ----- 
 
@@ -40,16 +37,7 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
         max_num_episodes, pre_train_episodes, max_num_step, goal):
 
     # Open a new thread with the TCP Server to obtain the current state image
-    try:
-
-        t = threading.Thread(target=tcp_server)
-        t.start()
-    
-    except Exception as e:
-        print("\n\n FATAL: Could not start TCP Server. Exiting \n\n")
-        print(e)
-        sys.exit()
-    
+    rdCentre.initialize()
 
     # In the first episode we need some time to start the camera
     # app. We stop the execution until we open the app and the tcp server
@@ -69,7 +57,7 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
         episode_buffer = ExperienceReplay(buffer_size=max_num_step)
 
         # Take an image of the road
-        state = car_env.get_state() # New code
+        state = rdCentre.get_road_picture() # New code
 
         # Process the state as a stack of three images
         stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
@@ -85,6 +73,8 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
         # Current step of the episode
         cur_step = 0
 
+        input("\n Ready to begin with episode {}, press any key to continue... \n".format(num_episode))
+
         while cur_step < max_num_step and not done:
 
             cur_step += 1
@@ -93,8 +83,8 @@ def train(car, batch_size, num_epochs, update_freq, annealing_steps,
             action = car.get_action(state, is_random=(num_episode < pre_train_episodes))
 
             # Perform the action and retrieve the next state, reward and done
-            next_state, reward, done = live_step(action)
-            print("NS: {}, reward: {}, done: {}".format(next_state, reward, done))
+            next_state, reward, done = rdCentre.perform_step(action)
+            print("reward: {}, done: {}".format(reward, done))
 
             # Process the state as a stack of three images
             next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)

@@ -6,12 +6,12 @@ import datetime
 if __name__ == "__main__":
 
     # Load an color image in grayscale
-    img = cv2.imread('/home/tfg/Escritorio/ROI4.png', -1)
+    img = cv2.imread('/home/tfg/Escritorio/2.png', -1)
     
     ri = RoadImage(img)
     
     points = ri.analyse()
-    raw_image = ri.get_image()
+    raw_image = ri.get_image().copy()
     last_point = None
     
     for p in points:
@@ -29,10 +29,11 @@ if __name__ == "__main__":
         last_point = p_int  
 
     print(ri.compute_distance_points(points[-1], points[-2]))
+    print("Distance: {}".format(ri.center_offset()))
 
-    print("RI {}".format(ri.center_offset()))
+    print("RI {}".format(ri.center_offset()/90))
 
 
-    cv2.imshow("Test", raw_image)
+    cv2.imshow("Test", ri.get_hough())
     cv2.waitKey(0)
     cv2.destroyAllWindows()
