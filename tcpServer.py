@@ -79,36 +79,15 @@ def tcp_server():
                     opencvImage = np.array(pimg)
 
                     # Fix width to 200px
-                    (h, w, d) = opencvImage.shape
-                    r = 200.0 / float(h)
                     dim = (268, 200)
                     resizedI = cv2.resize(opencvImage, dim)
 
                     # Rotate the image
-                    (h2, w2) = resizedI.shape[:2]
-                    (cX, cY) = (w2 // 2, h2 // 2)
-
-                    # grab the rotation matrix (applying the negative of the
-                    # angle to rotate clockwise), then grab the sine and cosine
-                    # (i.e., the rotation components of the matrix)
-                    M = cv2.getRotationMatrix2D((cX, cY), -90, 1.0)
-                    cos = np.abs(M[0, 0])
-                    sin = np.abs(M[0, 1])
-
-                    # compute the new bounding dimensions of the image
-                    nW = int((h2 * sin) + (w2 * cos))
-                    nH = int((h2 * cos) + (w2 * sin))
-
-                    # adjust the rotation matrix to take into account translation
-                    M[0, 2] += (nW / 2) - cX
-                    M[1, 2] += (nH / 2) - cY
-
-                    # perform the actual rotation and return the image
-                    rotated90 = cv2.warpAffine(resizedI, M, (nW, nH))
+                    rotated90 = cv2.rotate(resizedI, rotateCode=0)
                     #cv2.imshow("rotated", rotated90)
 
                     # Crop image so its witdh is 200px and its height is 134px
-                    roi = rotated90[nH//2:(nH//2)+134, 0:200]
+                    roi = rotated90[dim[0]//2:(dim[0]//2)+134, 0:200]
                     #cv2.imshow("ROI", roi)
                     #cv2.waitKey(1)
 

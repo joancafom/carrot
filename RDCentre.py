@@ -8,6 +8,7 @@ import time
 from collections import deque
 from arduino.PC.ElegooBoard import ElegooBoard
 from lanes.RoadImage import RoadImage
+from lanes.debugtools import draw_analysed_image
 
 '''
     The purpose of this class is to provide a standard point
@@ -73,8 +74,13 @@ class RDCentre:
 
         # Analyse the image obtained from the phone
         ri = RoadImage(state)
+        points = ri.analyse()
+        raw_image = ri.get_image()
+
+        draw_analysed_image(raw_image, points)
+
         # For debugging purposes, we show it
-        cv2.imshow("HotCam", ri.get_hough())
+        cv2.imshow("PhoneCam", raw_image)
         cv2.waitKey(1)
 
         # Get the distance to the midlane to compute the reward
