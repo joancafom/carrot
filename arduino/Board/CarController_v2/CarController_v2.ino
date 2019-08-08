@@ -104,7 +104,7 @@ void loop()
 
          // We need to disable all outputs to ensure
          // we only light the correct ones up.
-         disableOutputs();
+         disableOutputs(action);
          
          if(action == '0'){
 
@@ -113,7 +113,7 @@ void loop()
             
             // Ensure the physical mechanisms have
             // time to execute the action 
-            delay(500);
+            delay(125);
             
          }else if(action == '1'){
 
@@ -125,20 +125,19 @@ void loop()
 
             // Derecha
             digitalWrite(S3, HIGH);
-            delay(500);
+            delay(125);
             
          }else if(action == '3'){
 
             // Centro-Gas
             digitalWrite(S1, HIGH);
-            delay(250); 
+            delay(62); 
             
          } else if(action == '4'){
           
             // Freno
             digitalWrite(S4, HIGH);
-            delay(250);
-            digitalWrite(S4, LOW);
+            delay(31);
 
          }
       }
@@ -149,7 +148,7 @@ void loop()
    }else if (currentMillis - previousMillis >= waitingInverval) {
     
       previousMillis = currentMillis;
-      disableOutputs();
+      disableOutputs('\0');
       
       // Null Character
       lastAction = '\0';
@@ -158,13 +157,16 @@ void loop()
 }
 
 // Set all output PINs to LOW
-void disableOutputs(){
-           
-    // Izquierda
-    digitalWrite(S2, LOW);
+void disableOutputs(char action){
 
-    // Derecha
-    digitalWrite(S3, LOW);
+    if(action != '3'){
+      
+        // Izquierda
+        digitalWrite(S2, LOW);
+    
+        // Derecha
+        digitalWrite(S3, LOW);
+    }
   
     // Centro-Gas
     digitalWrite(S1, LOW);

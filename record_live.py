@@ -2,12 +2,7 @@ import tkinter as tk
 from tkinter import Label
 from tk_debouncer.debouncer import Debouncer
 
-# Elegoo Board
-from arduino.PC.ElegooBoard import ElegooBoard
-
-# TCP Server
-from tcpServer import tcp_server, car_env
-import threading
+from RDCentre import RDCentre
 
 # Export 
 import numpy as np
@@ -59,12 +54,16 @@ live_records/pack_DDMMYYYY_hhmmss
         hhmmss: HoursMinutesSeconds
 '''
 
+rdCentre = RDCentre()
+
 class CarrotRecorder(object):
 
-    # Creates a window that outputs the 
-    # key that is being pressed at the moment.
-    # Also sends the command via SerialPort 
-    # so that the Arduino board can perform it.
+    '''
+        Creates a window that outputs the 
+        key that is being pressed at the moment.
+        Also sends the command via SerialPort 
+        so that the Arduino board can perform it.
+    '''
     def __init__(self):
         
         # The actual window-app instance
@@ -73,12 +72,9 @@ class CarrotRecorder(object):
         # they detect a single long press as multiple frequent
         # key presses/releases. Debouncer transforms that into 
         # a single key press & release
-        #
-        # ElegooBoard is an auxiliary class that handles
-        # connections with arduino-like boards
+        
         self.tkinterApp = tk.Tk()
         self.debouncer = Debouncer(self._pressed_cb, self._released_cb, self._nd_pressed_cb)
-        self.board = ElegooBoard()
 
         # UI initialization
         self.label1 = Label(self.tkinterApp, text='None', width=50, bg='yellow')
@@ -94,6 +90,7 @@ class CarrotRecorder(object):
         # Status Registers
         self.c_state = None
         self.c_next_state = None
+        self.c_action = None
 
         # Export
         self.steps = 0
@@ -108,31 +105,31 @@ class CarrotRecorder(object):
 
         if event.keysym == 'a':
 
-            self.c_state = car_env.get_state()
-            self.board.send_directions(0)
-            self.c_next_state = car_env.get_state()
-            print('Left')
+            next_state, reward, done = rdCentre.perform_step(0)
+            self.write_new_frame(self.c_state, next_state, 0, reward, done)
+
+            #print('Left')
 
         elif event.keysym == 'd':
 
-            self.c_state = car_env.get_state()
-            self.board.send_directions(2)
-            self.c_next_state = car_env.get_state()
-            print('Right')
+            next_state, reward, done = rdCentre.perform_step(2)
+            self.write_new_frame(self.c_state, next_state, 2, reward, done)
+
+            #print('Right')
 
         elif event.keysym == 'w':
 
-            self.c_state = car_env.get_state()
-            self.board.send_directions(3)
-            self.c_next_state = car_env.get_state()
-            print('Up')
+            next_state, reward, done = rdCentre.perform_step(3)
+            self.write_new_frame(self.c_state, next_state, 3, reward, done)
+
+            #print('Up')
 
         elif event.keysym == 's':
 
-            self.c_state = car_env.get_state()
-            self.board.send_directions(4)
-            self.c_next_state = car_env.get_state()
-            print('Down')
+            next_state, reward, done = rdCentre.perform_step(4)
+            self.write_new_frame(self.c_state, next_state, 4, reward, done)
+
+            #print('Down')
 
     # Executed only one time while the 
     # key is being pressed (debounced press)
@@ -149,76 +146,92 @@ class CarrotRecorder(object):
             self.label1.config(text='None')
             self.last_key = 'None'
 
-    def a(self):
+    def write_new_frame(self, state, next_state, action, reward, done):
 
-        if self.last_key is 'None':
-            self.c_state = car_env.get_state()
-            self.c_next_state = car_env.get_state()
+        self.steps += 1
 
         # Write the states and add a new line in the summary
-        np.savez(self.savez_path.format(self.steps + 1), **{'01_state' : self.c_state, '02_next_state': self.c_next_state})
-        self.csv_writer.writerow([self.last_key, 2, 0])
+        np.savez(self.savez_path.format(self.steps), **{'01_state' : state, '02_next_state': next_state})
+        self.csv_writer.writerow([action, reward, done])
+
         # Asynchronous writing...
         self.summary_file.flush()
 
-        print("Action: {}".format(self.last_key))
-        print("S: {}".format(self.c_state))
-        print("NS: {}".format(self.c_next_state))
+        print("Action: {}".format(action))
+        print("Reward: {}".format(reward))
 
-        self.steps += 1
-        self.tkinterApp.after(500, self.a)
+        self.c_state = next_state
 
-    # Entry point of the application
-    # Initializes connections and passes
-    # mainloop to the TKinter app
+    def check_idle_loop(self):
+
+        if self.last_key is 'None':
+            next_state, reward, done = rdCentre.perform_step(1)
+            self.write_new_frame(self.c_state, next_state, 1, reward, not done)
+        
+        self.tkinterApp.after(500, self.check_idle_loop)
+
+    '''
+
+        Entry point of the app. 
+        Creates a synchronous activity
+        and initializes Tkinter
+
+    '''
     def load(self):
-        self.board.open()
-        self.tkinterApp.after(500, self.a)
+        self.tkinterApp.after(250, self.check_idle_loop)
+        self.c_state = rdCentre.get_road_picture()
         self.tkinterApp.mainloop()
 
-def main():
+if __name__ == '__main__':
 
+
+    # Create an instance of the class we'll be using
+    # to record the episode
     tkinterApp = CarrotRecorder()
-
-    try:
-        t = threading.Thread(target=tcp_server)
-        t.start()
-        input("Press any key to continue...")
-
     
-    except Exception as e:
-        print(e)
+    # Open a new thread with the TCP Server to obtain the current state image
+    rdCentre.initialize()
 
-    # --- Create the folders where to record ---
+    # In the first episode we need some time to start the camera
+    # app. We stop the execution until we open the app and the tcp server
+    # gets the first image. Then we can press any key to continue the
+    # execution
+    input(" Waiting for the client to connect. Press any key to continue...")
 
-    # First the main '/live_records' folder
+    # ----------- FOLDERS & I/O -----------
+    #
+    ## First the main '/live_records' folder
     records_path = os.path.join(BASE_DIR, RECORD_MAIN_PATH)
     
     if not os.path.exists(records_path):
-            os.makedirs(records_path)
+        os.makedirs(records_path)
     
-    # Now the current gameplay folder
+    ## Now the current gameplay folder
     today = datetime.datetime.today()
     today_str = today.strftime(DATE_FORMAT)
     tkinterApp.gameplay_path = os.path.join(records_path, FOLDER_NAME_FORMAT.format(today_str))
     
     if not os.path.exists(tkinterApp.gameplay_path):
-            os.makedirs(tkinterApp.gameplay_path)
+        os.makedirs(tkinterApp.gameplay_path)
 
-    # --- Create the summary files and begin to record ---
+    ## Create the summary files and begin to record
     summary_path = os.path.join(tkinterApp.gameplay_path, SUMMARY_NAME_FORMAT)
     tkinterApp.savez_path = os.path.join(tkinterApp.gameplay_path, '{}.npz')
+    
+    ##
+    #
+    # -----------------------------------------
 
     with open(summary_path, mode='w', encoding='utf-8') as summary:
 
-            tkinterApp.summary_file = summary
-            tkinterApp.csv_writer = csv.writer(tkinterApp.summary_file, delimiter=SUMMARY_DELIMITER)
+        tkinterApp.summary_file = summary
+        tkinterApp.csv_writer = csv.writer(tkinterApp.summary_file, delimiter=SUMMARY_DELIMITER)
 
-            # Column description
-            tkinterApp.csv_writer.writerow(['Action', 'Reward', 'Done'])
+        # Column description
+        tkinterApp.csv_writer.writerow(['Action', 'Reward', 'In Progress'])
 
-            # Begin the game
-            tkinterApp.load()
+        # Begin the recording
+        tkinterApp.load()
     
     # Close the file's writing stream
     tkinterApp.summary_file.close()
@@ -226,6 +239,4 @@ def main():
     print('*** Live record was succesfully saved! *** \n')
     print('Path: {}'.format(tkinterApp.gameplay_path))
 
-
-if __name__ == '__main__':
-    main()
+    print("Press Ctrl-C to exit the program")

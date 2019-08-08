@@ -29,6 +29,9 @@ The following assumptions on the image are made:
 
 """
 
+MIN_INTERLANE_PX = 30
+INTERLANE_PX = 190
+
 class RoadImage:
 
     def __init__(self, input_image):
@@ -148,6 +151,8 @@ class RoadImage:
         lanes_dist2 = self.compute_distance_points(left_point, right_point_partner)
 
         if lanes_dist and lanes_dist < MIN_INTERLANE_PX or lanes_dist2 and lanes_dist2 < MIN_INTERLANE_PX:
+            #print('dropped')
+            #print(lanes_dist, lanes_dist2)
             right_point = None
             right_point_partner = None
 

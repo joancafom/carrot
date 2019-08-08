@@ -56,8 +56,8 @@ class RDCentre:
         # 1. The car performs the action and we wait for
         # it to happen
 
-        #board.send_directions(int(action))
-        time.sleep(0.25)
+        self.board.send_directions(int(action))
+        #time.sleep(0.25)
 
         state = self.get_road_picture()
 
