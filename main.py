@@ -256,16 +256,22 @@ def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
 
 def play(car, max_num_episodes, max_num_step, goal):
 
+    # Open a new thread with the TCP Server to obtain the current state image
+    rdCentre.initialize()
+
+    # In the first episode we need some time to start the camera
+    # app. We stop the execution until we open the app and the tcp server
+    # gets the first image. Then we can press any key to continue the
+    # execution
+    input(" Waiting for the client to connect. Press any key to continue...")
+    
     car.epsilon = car.epsilon_min
 
     num_episode = 0
     while num_episode < max_num_episodes:
 
         # Get the game state from the environment
-        state = env.reset()
-        # Solves the bug that prevents gym from rendering
-        # in 'state_pixels' mode
-        env.env.viewer.window.dispatch_events()
+        state = rdCentre.get_road_picture() # New code
 
         # Process the state as a stack of three images
         stacked_state, stacked_frames = stack_frames(car.stacked_frames, state, True)
@@ -290,7 +296,7 @@ def play(car, max_num_episodes, max_num_step, goal):
             action = car.get_action(state)
 
             # Perform the action and retrieve the next state, reward and done
-            next_state, reward, done, _ = env.step(convert_action_to_gym(action))
+            next_state, reward, done = rdCentre.perform_step(action)
 
             # Process the state as a stack of three images
             next_stacked_state, next_stacked_frames = stack_frames(car.stacked_frames, next_state, False)

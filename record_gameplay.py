@@ -42,7 +42,7 @@ DATE_FORMAT = '%d%m%Y_%H%M%S'
 SUMMARY_DELIMITER = '|'
 FOLDER_NAME_FORMAT = 'pack_{}'
 SUMMARY_NAME_FORMAT = 'summary.csv'
-RECORD_MAIN_PATH = 'records/'
+RECORD_MAIN_PATH = 'live_records/'
 ACT_DESCRIPTIONS = [
         'Izquierda',
         'Centro',

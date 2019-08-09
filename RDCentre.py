@@ -17,7 +17,7 @@ from lanes.debugtools import draw_analysed_image
 
 '''
 
-ACTION_MEMORY_MAX = 5
+ACTION_MEMORY_MAX = 8
 MIDLANE_PX = 190/2
 
 class RDCentre:
@@ -65,12 +65,57 @@ class RDCentre:
         # to ensure that the reward is updated accordingly.
         self.action_memory.append(int(action))
 
-        # If the car is not moving forward...
-        # we decrement the reward.
-        print(self.action_memory)
-        print("IS 3 on a? {}".format(3 in self.action_memory))
-        if 3 not in self.action_memory:
-            step_reward -= 1
+        # Analyse the image obtained from the phone
+        ri = RoadImage(state)
+        points = ri.analyse()
+        raw_image = ri.get_image()
+
+        draw_analysed_image(raw_image, points)
+
+        # For debugging purposes, we show it
+        cv2.imshow("PhoneCam", raw_image)
+        cv2.waitKey(1)
+
+        # Get the distance to the midlane to compute the reward
+        midlane_distance = ri.center_offset()
+
+        # If the distance could not be computed or it exceeds the width
+        # of one of our lanes
+        if not midlane_distance or midlane_distance > MIDLANE_PX:
+
+            if self.out_counter >= 8:
+                done = False
+                step_reward = -100
+                self.out_counter = 0
+
+                print(" You've been kicked out")
+            else:
+                self.out_counter += 1
+        
+        else:
+
+            self.out_counter = 0
+
+            # If the car has not moved forward in 
+            # the last 8 frames, we set the reward
+            # to be -2.5
+            if 3 not in self.action_memory:
+                step_reward = -2.5
+            else:
+                norm_distance = midlane_distance / MIDLANE_PX
+                step_reward += 5 * (1 - norm_distance)
+        
+        self.reward_counter += step_reward
+
+        print("Step Reward: {}".format(self.reward_counter))
+
+        return state, step_reward, done
+    
+    def get_reward(self, state, action):
+
+        step_reward = 0
+
+        self.action_memory.append(int(action))
 
         # Analyse the image obtained from the phone
         ri = RoadImage(state)
@@ -90,8 +135,7 @@ class RDCentre:
         # of one of our lanes
         if not midlane_distance or midlane_distance > MIDLANE_PX:
 
-            if self.out_counter >= 5:
-                done = True
+            if self.out_counter >= 8:
                 step_reward = -100
                 self.out_counter = 0
 
@@ -101,14 +145,19 @@ class RDCentre:
         
         else:
 
-            print("Distance: {}".format(midlane_distance))
             self.out_counter = 0
 
-            norm_distance = midlane_distance / MIDLANE_PX
-            step_reward += 5 * (1 - norm_distance)
+            # If the car has not moved forward in 
+            # the last 8 frames, we set the reward
+            # to be -2.5
+            if 3 not in self.action_memory:
+                step_reward = -2.5
+            else:
+                norm_distance = midlane_distance / MIDLANE_PX
+                step_reward += 5 * (1 - norm_distance)
         
         self.reward_counter += step_reward
 
         print("Step Reward: {}".format(self.reward_counter))
 
-        return state, step_reward, done
+        return step_reward
