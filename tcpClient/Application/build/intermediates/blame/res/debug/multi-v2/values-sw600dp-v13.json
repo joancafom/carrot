@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+            "outputFile": "/Users/joseantonio/Documents/Android/carrot/tcpClient/Application/build/intermediates/incremental/mergeDebugResources/merged.dir/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values-sw600dp\\template-styles.xml",
+                    "source": "/Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/res/values-sw600dp/template-styles.xml",
                     "from": {
                         "startLines": "18",
                         "startColumns": "4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Alicia\\.gradle\\caches\\transforms-2\\files-2.1\\4185b2c5445c23e5123d13f7cdb1ae04\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "/Users/joseantonio/.gradle/caches/transforms-2/files-2.1/b77eb240a0a5a69b444a04bd41eeb84c/res/values-sw600dp-v13/values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -33,7 +33,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\src\\main\\res\\values-sw600dp\\template-dimens.xml",
+                    "source": "/Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/res/values-sw600dp/template-dimens.xml",
                     "from": {
                         "startLines": "20,21",
                         "startColumns": "4,4",

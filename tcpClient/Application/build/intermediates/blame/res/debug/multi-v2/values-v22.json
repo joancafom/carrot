@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Alicia\\Documents\\GitHub\\carrot\\tcpClient\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v22\\values-v22.xml",
+            "outputFile": "/Users/joseantonio/Documents/Android/carrot/tcpClient/Application/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v22/values-v22.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alicia\\.gradle\\caches\\transforms-2\\files-2.1\\4185b2c5445c23e5123d13f7cdb1ae04\\res\\values-v22\\values-v22.xml",
+                    "source": "/Users/joseantonio/.gradle/caches/transforms-2/files-2.1/b77eb240a0a5a69b444a04bd41eeb84c/res/values-v22/values-v22.xml",
                     "from": {
                         "startLines": "2,3,4,9",
                         "startColumns": "4,4,4,4",

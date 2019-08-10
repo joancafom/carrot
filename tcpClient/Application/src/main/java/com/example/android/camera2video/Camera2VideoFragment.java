@@ -101,6 +101,8 @@ public class Camera2VideoFragment extends Fragment
     private static final int REQUEST_VIDEO_PERMISSIONS = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
 
+    private Long lastMillis = null;
+
     /*
         "CAMERA" - Required to be able to access the camera device.
         "RECORD_AUDIO " - Allows an application to record audio.
@@ -418,8 +420,8 @@ public class Camera2VideoFragment extends Fragment
     private Socket socket;
 
     // IP of the server we are connecting to:
-    //private static final String SERVER_IP = "192.168.43.78";
-    private static final String SERVER_IP = "192.168.0.18";
+    private static final String SERVER_IP = "192.168.43.78";
+    //private static final String SERVER_IP = "192.168.0.18";
 
     // PORT of the server we are connecting to:
     private static final int SERVER_PORT = 447;
@@ -862,47 +864,52 @@ public class Camera2VideoFragment extends Fragment
                 return;
             }
 
-            // Conversión de la imagen
+            if(lastMillis == null || (System.currentTimeMillis() - lastMillis > 120)){
 
-            String imgString = YUV420toJPEG(image);
+                lastMillis = System.currentTimeMillis();
 
-            // Envío de la imagen
+                // Conversión de la imagen
 
-            try {
+                String imgString = YUV420toJPEG(image);
 
-                /*
-                    "PrintWriter" prints formatted representations of objects to a text-output
-                    stream.
+                // Envío de la imagen
 
-                    "BufferedWriter" writes text to a character-output stream, buffering characters
-                    so as to provide for the efficient writing of single characters, arrays, and
-                    strings.
+                try {
 
-                    In general, a Writer sends its output immediately to the underlying character or
-                    byte stream. It is advisable to wrap a BufferedWriter around any Writer whose
-                    write() operations may be costly, such as OutputStreamWriters.
+                    /*
+                        "PrintWriter" prints formatted representations of objects to a text-output
+                        stream.
 
-                    The "OutputStream" class is the superclass of all classes representing an output
-                    stream of bytes. An out stream accepts output bytes and sends them to some sink.
-                 */
+                        "BufferedWriter" writes text to a character-output stream, buffering characters
+                        so as to provide for the efficient writing of single characters, arrays, and
+                        strings.
 
-                PrintWriter out = new PrintWriter(new BufferedWriter(
-                        new OutputStreamWriter(socket.getOutputStream())),
-                        true);
+                        In general, a Writer sends its output immediately to the underlying character or
+                        byte stream. It is advisable to wrap a BufferedWriter around any Writer whose
+                        write() operations may be costly, such as OutputStreamWriters.
 
-                /*
-                    The method "print(String s)" prints a string. The string's characters are
-                    converted into bytes according to the platform's default character enconding,
-                    and these bytes are written in exactly the manner of the write(int) method.
-                 */
+                        The "OutputStream" class is the superclass of all classes representing an output
+                        stream of bytes. An out stream accepts output bytes and sends them to some sink.
+                     */
 
-                out.print(imgString);
-                out.print("*");
+                    PrintWriter out = new PrintWriter(new BufferedWriter(
+                            new OutputStreamWriter(socket.getOutputStream())),
+                            true);
 
-                out.flush();
+                    /*
+                        The method "print(String s)" prints a string. The string's characters are
+                        converted into bytes according to the platform's default character enconding,
+                        and these bytes are written in exactly the manner of the write(int) method.
+                     */
 
-            } catch (Exception e) {
+                    out.print(imgString);
+                    out.print("*");
 
+                    out.flush();
+
+                } catch (Exception e) {
+
+                }
             }
 
             /*

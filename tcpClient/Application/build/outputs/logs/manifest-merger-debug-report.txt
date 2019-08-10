@@ -1,177 +1,177 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:30:1-112:12
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:30:1-112:12
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:30:1-112:12
-MERGED from [com.android.support:support-v13:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\0eaf58f7ba478fccfe540cc7e8322f5f\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-v4:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2fd162a8c2b0b9aae3eefa2ffa6d05d6\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\e7405f78067b51af28c33912400b9abc\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\4185b2c5445c23e5123d13f7cdb1ae04\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\8126532edd7454b21098302f8a6efdc4\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2853dc77f98b8659729dfd3791c141cf\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\bbdc3f89177ac7018a2caf6b74f4aeb8\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\7121d7aa71a5dc13fa7215f8bf3cba0c\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\fd6b6b8b59ca26395f4a35ad4f42691f\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\46ef62cd3388b75597c45d7479e0f227\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:loader:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\1a7d4895f0ba96dfc1c5a37f8dba077a\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\5ea04724637085db826e1d8c790f0134\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\0dbd736ebbf2ec59727eb7db556c6de0\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\764cb1dcdbadb12f60b9cf6db2522979\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\956ab2a3e07ccd10f2abcd7ba3e764d4\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:customview:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\8a9c03135eda3f2a89aafa07ddeca8c8\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\aafc1404a3db36f4a454b899b1842929\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\69208df6483f31e1eb8d1c052d7d249c\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\6c23f56a0ac9adf0b988f119a7b685a9\AndroidManifest.xml:17:1-24:12
-MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\9b47fec133e5db23bac00029a5c39030\AndroidManifest.xml:17:1-25:12
-MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\cf61b0283320c373b0abb3e20a27d305\AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\d10fe8aed05505c3ef174b81253d2df2\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\09dceccb62bf400440a2d898765a97ed\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\3d39044ee2453d0105641b5b2ff44272\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:print:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2e64eee4f61df00500709a0feef565f0\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\20bc2065c02f486d6cf587ed8985b8e1\AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\408f018287b6dcf63ed02fb16b1ab769\AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\f3ddf46425f3f941f1605eb25c9a3b71\AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\fd997bf6c2fabb7171b2b525d5f8695f\AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\271db1b65fabcb4ecad04fd0c0c8dea6\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:30:1-112:12
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:30:1-112:12
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:30:1-112:12
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:30:1-112:12
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:30:1-112:12
+MERGED from [com.android.support:support-v13:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/a9f457f081688d5216b18b6bcafd3d28/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-v4:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/96dd2438bbaf2793d19f9c8e53061dc9/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/c44bc2841b913e7a65240953f0edd7bf/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/b77eb240a0a5a69b444a04bd41eeb84c/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0a4fe421b3cc28ac6c3024a477a64475/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/69bc6217c40ad349edd924d1f1126ea0/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/e5e2427298fb8b41a4875e450b542623/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/9f8da78a4a188f457f6be189ad004e17/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/9da5983494eab18dbcae23dbea94cae7/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/81584bf1bde149c817d9a1034b2065ee/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/894f15b846b758754c80abdfe830a33b/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/fe308bdc08daa332c6f1ed1234b06dd3/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/ed5454e8f31d3c47ad2f92a7849d47ff/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/83b417c90ae658c7c7a07bf03b88b321/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/2921cf86c9531637782a6ca5ceac96fe/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/cc3914d2136dcaf6d065bd3c2c95c2d3/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4b767efe2cb205e6f71c5993c1a7d093/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4a311d51ae3e8ffd107d3bb6a66efcd9/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0442dfcd5e648a0a8265987d5b60d3bf/AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/f9aed7df8a1b0748a7d91569b725e82b/AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cursoradapter:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/5eef8e730a5b8afcdcda66ab00b332fc/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/cf6607ee21a61ebe3904b29b279c587d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/2d630d7d7e156534e16c48cfd4c6e5a1/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/8a7a8154e743ef67bf1aa32096595ead/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/1f0c5b0b01c8dafc84d15b166ca1e86d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0da9864487c06315fa9c2d52eacb5791/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/60ee6ad23bbe6b0c91eb9fb05307b9e7/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/6405993d553bb9ad554dbf05d79f8fca/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/54d1bc2cd74ea92473f5720ee847d8e9/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4493684e0c1fee13d015e924456bfbba/AndroidManifest.xml:17:1-22:12
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:30:1-112:12
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:30:1-112:12
 	package
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:33:5-47
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:33:5-47
 	android:versionName
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:36:5-30
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:36:5-30
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
 	xmlns:tools
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:32:5-51
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:32:5-51
 	xmlns:android
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:31:5-63
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:31:5-63
 	android:versionCode
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:35:5-28
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:35:5-28
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
 uses-permission#android.permission.CAMERA
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:49:5-64
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:49:5-64
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:49:22-62
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:49:22-62
 uses-permission#android.permission.RECORD_AUDIO
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:50:5-70
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:50:5-70
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:50:22-68
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:50:22-68
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:51:5-80
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:51:5-80
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:51:22-78
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:51:22-78
 uses-permission#android.permission.INTERNET
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:53:5-66
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:53:5-66
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:53:22-64
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:53:22-64
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:54:5-78
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:54:5-78
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:54:22-76
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:54:22-76
 application
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:70:5-111:19
-MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\6c23f56a0ac9adf0b988f119a7b685a9\AndroidManifest.xml:22:5-94
-MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\6c23f56a0ac9adf0b988f119a7b685a9\AndroidManifest.xml:22:5-94
-MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\9b47fec133e5db23bac00029a5c39030\AndroidManifest.xml:22:5-23:19
-MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\9b47fec133e5db23bac00029a5c39030\AndroidManifest.xml:22:5-23:19
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:70:5-111:19
+MERGED from [com.android.support:support-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0442dfcd5e648a0a8265987d5b60d3bf/AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0442dfcd5e648a0a8265987d5b60d3bf/AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/f9aed7df8a1b0748a7d91569b725e82b/AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/f9aed7df8a1b0748a7d91569b725e82b/AndroidManifest.xml:22:5-23:19
 	android:appComponentFactory
-		ADDED from [com.android.support:support-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\6c23f56a0ac9adf0b988f119a7b685a9\AndroidManifest.xml:22:18-91
+		ADDED from [com.android.support:support-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0442dfcd5e648a0a8265987d5b60d3bf/AndroidManifest.xml:22:18-91
 	android:label
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:73:9-42
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:73:9-42
 	tools:ignore
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:76:9-48
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:76:9-48
 	android:icon
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:72:9-45
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:72:9-45
 	android:allowBackup
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:71:9-35
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:71:9-35
 	android:theme
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:74:9-51
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:74:9-51
 activity#com.example.android.camera2video.CameraActivity
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:86:9-109:20
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:86:9-109:20
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:86:19-49
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:86:19-49
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:94:13-108:29
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:94:13-108:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:106:17-69
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:106:17-69
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:106:25-66
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:106:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:107:17-77
+ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:107:17-77
 	android:name
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml:107:27-74
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml:107:27-74
 uses-sdk
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-MERGED from [com.android.support:support-v13:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\0eaf58f7ba478fccfe540cc7e8322f5f\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v13:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\0eaf58f7ba478fccfe540cc7e8322f5f\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2fd162a8c2b0b9aae3eefa2ffa6d05d6\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2fd162a8c2b0b9aae3eefa2ffa6d05d6\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\e7405f78067b51af28c33912400b9abc\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\e7405f78067b51af28c33912400b9abc\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\4185b2c5445c23e5123d13f7cdb1ae04\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\4185b2c5445c23e5123d13f7cdb1ae04\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\8126532edd7454b21098302f8a6efdc4\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\8126532edd7454b21098302f8a6efdc4\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2853dc77f98b8659729dfd3791c141cf\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2853dc77f98b8659729dfd3791c141cf\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\bbdc3f89177ac7018a2caf6b74f4aeb8\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\bbdc3f89177ac7018a2caf6b74f4aeb8\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\7121d7aa71a5dc13fa7215f8bf3cba0c\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\7121d7aa71a5dc13fa7215f8bf3cba0c\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\fd6b6b8b59ca26395f4a35ad4f42691f\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\fd6b6b8b59ca26395f4a35ad4f42691f\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\46ef62cd3388b75597c45d7479e0f227\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\46ef62cd3388b75597c45d7479e0f227\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:loader:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\1a7d4895f0ba96dfc1c5a37f8dba077a\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:loader:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\1a7d4895f0ba96dfc1c5a37f8dba077a\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\5ea04724637085db826e1d8c790f0134\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\5ea04724637085db826e1d8c790f0134\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\0dbd736ebbf2ec59727eb7db556c6de0\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\0dbd736ebbf2ec59727eb7db556c6de0\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\764cb1dcdbadb12f60b9cf6db2522979\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\764cb1dcdbadb12f60b9cf6db2522979\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\956ab2a3e07ccd10f2abcd7ba3e764d4\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\956ab2a3e07ccd10f2abcd7ba3e764d4\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:customview:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\8a9c03135eda3f2a89aafa07ddeca8c8\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:customview:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\8a9c03135eda3f2a89aafa07ddeca8c8\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\aafc1404a3db36f4a454b899b1842929\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\aafc1404a3db36f4a454b899b1842929\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\69208df6483f31e1eb8d1c052d7d249c\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\69208df6483f31e1eb8d1c052d7d249c\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\6c23f56a0ac9adf0b988f119a7b685a9\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\6c23f56a0ac9adf0b988f119a7b685a9\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\9b47fec133e5db23bac00029a5c39030\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\9b47fec133e5db23bac00029a5c39030\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\cf61b0283320c373b0abb3e20a27d305\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\cf61b0283320c373b0abb3e20a27d305\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\d10fe8aed05505c3ef174b81253d2df2\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\d10fe8aed05505c3ef174b81253d2df2\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\09dceccb62bf400440a2d898765a97ed\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\09dceccb62bf400440a2d898765a97ed\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\3d39044ee2453d0105641b5b2ff44272\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\3d39044ee2453d0105641b5b2ff44272\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:print:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2e64eee4f61df00500709a0feef565f0\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:print:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\2e64eee4f61df00500709a0feef565f0\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\20bc2065c02f486d6cf587ed8985b8e1\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\20bc2065c02f486d6cf587ed8985b8e1\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\408f018287b6dcf63ed02fb16b1ab769\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\408f018287b6dcf63ed02fb16b1ab769\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\f3ddf46425f3f941f1605eb25c9a3b71\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\f3ddf46425f3f941f1605eb25c9a3b71\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\fd997bf6c2fabb7171b2b525d5f8695f\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\fd997bf6c2fabb7171b2b525d5f8695f\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\271db1b65fabcb4ecad04fd0c0c8dea6\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Alicia\.gradle\caches\transforms-2\files-2.1\271db1b65fabcb4ecad04fd0c0c8dea6\AndroidManifest.xml:20:5-44
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+MERGED from [com.android.support:support-v13:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/a9f457f081688d5216b18b6bcafd3d28/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v13:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/a9f457f081688d5216b18b6bcafd3d28/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/96dd2438bbaf2793d19f9c8e53061dc9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/96dd2438bbaf2793d19f9c8e53061dc9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/c44bc2841b913e7a65240953f0edd7bf/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/c44bc2841b913e7a65240953f0edd7bf/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/b77eb240a0a5a69b444a04bd41eeb84c/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/b77eb240a0a5a69b444a04bd41eeb84c/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0a4fe421b3cc28ac6c3024a477a64475/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0a4fe421b3cc28ac6c3024a477a64475/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/69bc6217c40ad349edd924d1f1126ea0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/69bc6217c40ad349edd924d1f1126ea0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/e5e2427298fb8b41a4875e450b542623/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/e5e2427298fb8b41a4875e450b542623/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/9f8da78a4a188f457f6be189ad004e17/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/9f8da78a4a188f457f6be189ad004e17/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/9da5983494eab18dbcae23dbea94cae7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/9da5983494eab18dbcae23dbea94cae7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/81584bf1bde149c817d9a1034b2065ee/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/81584bf1bde149c817d9a1034b2065ee/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/894f15b846b758754c80abdfe830a33b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/894f15b846b758754c80abdfe830a33b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/fe308bdc08daa332c6f1ed1234b06dd3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/fe308bdc08daa332c6f1ed1234b06dd3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/ed5454e8f31d3c47ad2f92a7849d47ff/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/ed5454e8f31d3c47ad2f92a7849d47ff/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/83b417c90ae658c7c7a07bf03b88b321/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/83b417c90ae658c7c7a07bf03b88b321/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/2921cf86c9531637782a6ca5ceac96fe/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/2921cf86c9531637782a6ca5ceac96fe/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/cc3914d2136dcaf6d065bd3c2c95c2d3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/cc3914d2136dcaf6d065bd3c2c95c2d3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4b767efe2cb205e6f71c5993c1a7d093/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4b767efe2cb205e6f71c5993c1a7d093/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4a311d51ae3e8ffd107d3bb6a66efcd9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4a311d51ae3e8ffd107d3bb6a66efcd9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0442dfcd5e648a0a8265987d5b60d3bf/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0442dfcd5e648a0a8265987d5b60d3bf/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/f9aed7df8a1b0748a7d91569b725e82b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/f9aed7df8a1b0748a7d91569b725e82b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/5eef8e730a5b8afcdcda66ab00b332fc/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/5eef8e730a5b8afcdcda66ab00b332fc/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/cf6607ee21a61ebe3904b29b279c587d/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/cf6607ee21a61ebe3904b29b279c587d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/2d630d7d7e156534e16c48cfd4c6e5a1/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/2d630d7d7e156534e16c48cfd4c6e5a1/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/8a7a8154e743ef67bf1aa32096595ead/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/8a7a8154e743ef67bf1aa32096595ead/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/1f0c5b0b01c8dafc84d15b166ca1e86d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/1f0c5b0b01c8dafc84d15b166ca1e86d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0da9864487c06315fa9c2d52eacb5791/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/0da9864487c06315fa9c2d52eacb5791/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/60ee6ad23bbe6b0c91eb9fb05307b9e7/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/60ee6ad23bbe6b0c91eb9fb05307b9e7/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/6405993d553bb9ad554dbf05d79f8fca/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/6405993d553bb9ad554dbf05d79f8fca/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/54d1bc2cd74ea92473f5720ee847d8e9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/54d1bc2cd74ea92473f5720ee847d8e9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4493684e0c1fee13d015e924456bfbba/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] /Users/joseantonio/.gradle/caches/transforms-2/files-2.1/4493684e0c1fee13d015e924456bfbba/AndroidManifest.xml:20:5-44
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-		ADDED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\Alicia\Documents\GitHub\carrot\tcpClient\Application\src\main\AndroidManifest.xml
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+		ADDED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
+		INJECTED from /Users/joseantonio/Documents/Android/carrot/tcpClient/Application/src/main/AndroidManifest.xml
