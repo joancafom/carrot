@@ -2,7 +2,10 @@ import numpy as np
 from PIL import Image
 from collections import deque
 
-
+'''
+    Module with several functions of different functionalities
+    that are helpful in the training/AI part of our project.
+'''
 
 # ----- Actions conversion -----
 

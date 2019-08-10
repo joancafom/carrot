@@ -5,12 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from aux import convert_action_to_gym, export_image, stack_frames
+from common.aux import convert_action_to_gym, export_image, stack_frames
 from record_gameplay import RECORD_MAIN_PATH, BASE_DIR
 from open_gameplays import open_episode
 
 from car_agent import CarAgent
-from experience_replay import ExperienceReplay
+from common.experience_replay import ExperienceReplay
 
 # Initialize the CarRacing environment
 env = gym.make('CarRacing-v0')
