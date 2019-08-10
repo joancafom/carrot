@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2014 The Android Open Source Project
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!--
+    El AndroidManifest.xml es un archivo que contiene las
+    configuraciones básicas de nuestra aplicación.
+-->
+<!--
+   "xmlns:android"/"xmlns:tools" -> Se importan los xml NameSpaces android y tools.
+   "package" -> Se define un nombre completo de paquete para la aplicación.
+   "android:versionCode" -> Número interno de versión.
+   "android:versionName" -> Número de versión mostrado a los usuarios.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.android.camera2video"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="28" />
+
+    <!--
+        "uses-permission" -> Solicita un permiso que se debe otorgar a la aplicación para que
+            funcione correctamente.
+
+            - CAMERA: Requiere acceso al dispositivo de la cámara.
+            - RECORD_AUDIO: Permite a la aplicación grabar audio
+            TODO: Eliminar la grabación de audio, que no es útil en nuestro contexto.
+            - WRITE_EXTERNAL_STORAGE: Permite a la aplicación escribir en el almacenamiento externo.
+            TODO: En futuras versiones los datos de grabación deberán mandarse vía WiFi en lugar de guardarse.
+    -->
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--
+        "application" -> Declaración de la aplicación, que contiene declaraciones de
+            sus componentes.
+        "android:allowBackup" -> Permite a la aplicación participar en los procesos de
+            copias de seguridad y restauración.
+        COMPLETED: Comprobar que funciona la aplicación sin la línea "android:fullBackupContent="true""
+        "android:icon" -> Icono de la aplicación.
+        "android:label" -> Nombre de la aplicación.
+        "android:theme" -> Referencia al recurso del estilo que define el tema de la aplicación.
+
+        "tools:ignore='GoogleAppIndexingWarning'" -> Permite indicar que se ignore el error que
+            indica que la aplicación no aparecerá en las búsquedas de Google Apps.
+    -->
+    <application
+        android:allowBackup="true"
+        android:appComponentFactory="android.support.v4.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_label"
+        android:theme="@style/DefaultCarroTxTheme" >
+
+        <!--
+            "activity" -> Declara una actividad que implementa parte de la interfaz de usuario
+                visual de la aplicación.
+            COMPLETED: Comprobar que funciona la aplicación sin la línea android:label="@string/app_name""
+
+            "android:name" -> Nombre de la clase que implementa la actividad.
+        -->
+
+        <activity android:name="com.example.android.camera2video.CameraActivity" >
+
+            <!--
+                "intent-filter" -> Especifica el tipo de intents que el componente podría recibir.
+                    Una intent es un objeto de acción que puedes usar para solicitar una acción de
+                    otro componente de la aplicación.
+            -->
+
+            <intent-filter>
+
+                <!--
+                    "action" -> Añade una acción a un intent filter.
+                        La acción "ACTION_MAIN" indica que este es el punto de entrada principal y
+                        que no se esperan datos de intents.
+
+                    "category" -> Añade un nombre de categoría a un intent filter.
+                        La categoría "CATEGORY_LAUNCHER" indica que el icono de esta actividad debe
+                        colocarse en el lanzador de la aplicación del sistema.
+                -->
+
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
