@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from debugtools import log, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING
+from lanes.image_debugtools import log, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING
 
 """
 Class that process & analyses a road image in 

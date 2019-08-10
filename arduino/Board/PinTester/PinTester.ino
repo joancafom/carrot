@@ -1,3 +1,8 @@
+/*
+ * Program designed to test out the connections
+ * between the Arduino board and the RC controller
+ */
+
 unsigned int testPin;
 
 // Actions and pins to test them out

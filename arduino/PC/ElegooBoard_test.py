@@ -1,6 +1,13 @@
 from ElegooBoard import ElegooBoard
 import time
 
+'''
+
+    Class to test out the Python-Arduino communication
+    over the Serial port.
+
+'''
+
 if __name__ == "__main__":
     
     instructions = [0, 1, 2, 3, 4, -1, 5.5, None, 5, 'A']

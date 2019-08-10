@@ -1,6 +1,6 @@
 import threading
 import sys
-from tcpServer import tcp_server, car_env
+from server.tcpServer import tcp_server, car_env
 
 # Step function
 import cv2
@@ -8,12 +8,12 @@ import time
 from collections import deque
 from arduino.PC.ElegooBoard import ElegooBoard
 from lanes.RoadImage import RoadImage
-from lanes.debugtools import draw_analysed_image
+from debugtools import draw_analysed_image
 
 '''
-    The purpose of this class is to provide a standard point
+    The purpose of this module is to provide a standard point
     of access to external communication as well as duties in which
-    the real driving is required. 
+    real driving is required. 
 
 '''
 
@@ -59,6 +59,8 @@ class RDCentre:
         self.board.send_directions(int(action))
         #time.sleep(0.25)
 
+        # Get a picture of the road after
+        # having performed the action
         state = self.get_road_picture()
 
         # We keep track of the actions we've taken, 
@@ -84,7 +86,7 @@ class RDCentre:
         if not midlane_distance or midlane_distance > MIDLANE_PX:
 
             if self.out_counter >= 8:
-                done = False
+                done = True
                 step_reward = -100
                 self.out_counter = 0
 

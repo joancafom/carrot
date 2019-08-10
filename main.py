@@ -5,18 +5,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from aux import convert_action_to_gym, export_image, stack_frames
+from common.aux import convert_action_to_gym, export_image, stack_frames
 from record_gameplay import RECORD_MAIN_PATH, BASE_DIR
 from open_gameplays import open_episode
 
 from car_agent import CarAgent
-from experience_replay import ExperienceReplay
+from common.experience_replay import ExperienceReplay
 
 from RDCentre import RDCentre
-#from gym.envs.box2d import CarRacing
-
-# Initialize the CarRacing environment
-env = gym.make('CarRacing-v0')
 
 # ----- Statistics section ----- 
 
@@ -28,6 +24,8 @@ print_every = 10
 save_every = 5
 # Tracks training losses
 losses = [0]
+
+# ----- Common communication section ----- 
 
 rdCentre = RDCentre()
 
@@ -290,7 +288,6 @@ def play(car, max_num_episodes, max_num_step, goal):
         while cur_step < max_num_step and not done:
 
             cur_step += 1
-            env.render()
 
             # Get the action to perform for the state
             action = car.get_action(state)
@@ -316,8 +313,6 @@ def play(car, max_num_episodes, max_num_step, goal):
         num_episode += 1
         rewards.append(sum_rewards)
 
-
-
 # ----- Initialization ----- 
 
 def setup(load_models=True):
@@ -337,6 +332,8 @@ def setup(load_models=True):
     car.main_qn.summary()
 
     return car
+
+    
 
 if __name__ == "__main__":
     

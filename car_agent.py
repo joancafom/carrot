@@ -9,7 +9,7 @@ import random
 
 import os
 from collections import deque
-from experience_replay import ExperienceReplay
+from common.experience_replay import ExperienceReplay
 
 
 '''
