@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import datetime
 
-from RoadImage import RoadImage
+from lanes.RoadImage import RoadImage
 from lanes.image_debugtools import draw_analysed_image
 
 '''
@@ -10,10 +10,7 @@ from lanes.image_debugtools import draw_analysed_image
     using one of the images from our hard_drive
 '''
 
-if __name__ == "__main__":
-
-    # Load a color image in grayscale
-    img = cv2.imread('./images/roi_test.png', -1)
+def analysis(img):
     
     # Create a new instance of the class that
     # analyses road images
@@ -28,8 +25,14 @@ if __name__ == "__main__":
     print("Distance: {}".format(ri.center_offset()))
 
     # Show the results
-    cv2.imshow("Result", raw_image)
     cv2.imshow("Hough Output", ri.get_hough())
+    cv2.imshow("Result", raw_image)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    # Load a color image in grayscale
+    img = cv2.imread('./images/roi_test.png', -1)
+    analysis(img)
