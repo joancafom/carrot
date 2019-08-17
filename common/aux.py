@@ -128,7 +128,7 @@ def preprocess_image(rgb_image):
     # 2) Crop the screen
     #res = res[29:95]
     # 3) Binarize
-    res = binarize(res)
+    #res = binarize(res)
     # 4) Normalize
     res = res/255.0
 

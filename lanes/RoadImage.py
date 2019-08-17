@@ -177,6 +177,7 @@ class RoadImage:
             # Get the parameters the characterize left lane mark before we proceed
             left_m = self.compute_slope(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
             left_n = self.compute_independent(left_point[0], left_point[1], left_point_partner[0], left_point_partner[1])
+            self.left_lane_top, self.left_lane_bottom = self.compute_line_drawing_points(left_m, left_n)
 
             if right_point is None:
 
@@ -195,6 +196,7 @@ class RoadImage:
             # Get the parameters the characterize right lane mark before we proceed
             right_m = self.compute_slope(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
             right_n = self.compute_independent(right_point[0], right_point[1], right_point_partner[0], right_point_partner[1])
+            self.right_lane_top, self.right_lane_bottom = self.compute_line_drawing_points(right_m, right_n)
 
             if left_point is None:
 
@@ -205,6 +207,26 @@ class RoadImage:
                 # lines in the picture by the width of a theoretical correct lane.
                 left_n = self.compute_reflected_independent(right_m, right_point, INTERLANE_PX)
                 left_m = -right_m
+
+        ## In order to ensure lines where chosen properly, we assert that each of the bottom
+        ## points fall in each side of the image (only if both points were identified correctly)
+        if self.left_lane_bottom and self.right_lane_bottom:
+
+            # If left bottom point is not on the left side, we discart
+            # it and use the reflection of the right lane
+            if self.left_lane_bottom[0] >= self.bottom_center[0]:
+
+                left_n = self.compute_reflected_independent(right_m, right_point, INTERLANE_PX)
+                left_m = -right_m
+                self.left_lane_bottom = None
+            
+            # If right bottom point is not on the right side, we discart
+            # it and use the reflection of the left lane
+            elif self.right_lane_bottom[0] <= self.bottom_center[0]:
+
+                right_n = self.compute_reflected_independent(left_m, left_point, INTERLANE_PX)
+                right_m = -left_m
+                self.right_lane_bottom = None
 
         ## Now, we have to ensure that both lines intersect. Two lines do not intersect
         ## if either they are parallel (same slope) or the same (same slope and independent)
@@ -230,11 +252,13 @@ class RoadImage:
 
         # Left Lane Line's Points: The upper-most and bottom-most points corresponding 
         # to the line, in order to draw it
-        self.left_lane_top, self.left_lane_bottom = self.compute_line_drawing_points(left_m, left_n)
+        if self.left_lane_bottom is None:
+            self.left_lane_top, self.left_lane_bottom = self.compute_line_drawing_points(left_m, left_n)
 
         # Right Lane Line's Points: The upper-most and bottom-most points corresponding 
         # to the line, in order to draw it
-        self.right_lane_top, self.right_lane_bottom = self.compute_line_drawing_points(right_m, right_n)
+        if self.right_lane_bottom is None:
+            self.right_lane_top, self.right_lane_bottom = self.compute_line_drawing_points(right_m, right_n)
 
         ##
         #
