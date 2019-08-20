@@ -249,7 +249,7 @@ def train_s(car, batch_size, num_epochs, update_freq, verbose=False, car_epsilon
     car.save_models()
 
 
-def play(car, max_num_episodes, max_num_step, goal):
+def play(car, max_num_episodes, max_num_step):
 
     car.epsilon = car.epsilon_min
 
@@ -377,13 +377,12 @@ if __name__ == "__main__":
         load_models = True
         car = setup(load_models=load_models)
 
-        # ----- Training hyperparameters ----- 
+        # ----- Play hyperparameters ----- 
 
         max_num_episodes = 5
         max_num_step = 500
-        goal = 500
 
-        play(car, max_num_episodes, max_num_step, goal)
+        play(car, max_num_episodes, max_num_step)
         print('Game completed!')
 
     elif 's' == res or 'S' == res:
