@@ -216,13 +216,7 @@ class CarAgent:
 
         # Reward from the action chosen in the train batch
         actual_reward = train_reward + (self.gamma * next_state_values * train_game_not_over)
-        
-        if supervised:
-            # When we are in supervised learning, we suppose that the best action
-            # is always provided. Hence, the  Q of other non-optimal actions must be
-            # decremented using the lowest score our game admits.
-            decrement_reward = self.min_score
-        
+           
         # Update the prediction the main nn would ouput with 
         # the new values to perform a gradient descent step
         # regular_q(a) = y_j
@@ -232,6 +226,9 @@ class CarAgent:
             # reward possible except for the one referencing the
             # action taken, that will hold the corresponding computed value.
             for e_index in range(batch_size):
+
+                decrement_reward = actual_reward[e_index] - np.absolute(0.03 * actual_reward[e_index])
+
                 for a_index in range(len(self.actions)):
                     regular_q[e_index, a_index] = actual_reward[e_index] if \
                     a_index == train_action[e_index] else decrement_reward
