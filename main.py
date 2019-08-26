@@ -252,7 +252,7 @@ def train_s(car, batch_size, num_epochs, update_freq, verbose=False):
     car.save_models()
 
 
-def play(car, max_num_episodes, max_num_step, goal):
+def play(car, max_num_episodes, max_num_step):
 
     # Open a new thread with the TCP Server to obtain the current state image
     rdCentre.initialize()
@@ -365,7 +365,7 @@ if __name__ == "__main__":
         max_num_episodes = 10000
         # Number of episodes in which only random actions will be taken
         # it is usually done at the beginning
-        pre_train_episodes = 100
+        pre_train_episodes = 0
         # Episode's maximum length (we'll finish it if overpassed)
         max_num_step = 500
 
@@ -383,13 +383,12 @@ if __name__ == "__main__":
         load_models = True
         car = setup(load_models=load_models)
 
-        # ----- Training hyperparameters ----- 
+        # ----- Play hyperparameters ----- 
 
         max_num_episodes = 5
         max_num_step = 500
-        goal = 500
 
-        play(car, max_num_episodes, max_num_step, goal)
+        play(car, max_num_episodes, max_num_step)
         print('Game completed!')
 
     elif 's' == res or 'S' == res:
