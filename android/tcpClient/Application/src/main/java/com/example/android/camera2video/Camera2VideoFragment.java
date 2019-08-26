@@ -864,7 +864,7 @@ public class Camera2VideoFragment extends Fragment
                 return;
             }
 
-            if(lastMillis == null || (System.currentTimeMillis() - lastMillis > 120)){
+            if(lastMillis == null || (System.currentTimeMillis() - lastMillis > 60)){
 
                 lastMillis = System.currentTimeMillis();
 
