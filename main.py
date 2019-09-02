@@ -369,6 +369,10 @@ if __name__ == "__main__":
         # and it will be considered as successful
         goal = 500
 
+        if max_num_step >= 1000:
+            env.spec.max_episode_steps = max_num_step
+            env._max_episode_steps = max_num_step
+
         # Start the training
         train(car, batch_size, num_epochs, update_freq, annealing_steps, 
         max_num_episodes, pre_train_episodes, max_num_step, goal, car_epsilon=epsilon_0)
@@ -383,6 +387,10 @@ if __name__ == "__main__":
 
         max_num_episodes = 5
         max_num_step = 500
+
+        if max_num_step >= 1000:
+            env.spec.max_episode_steps = max_num_step
+            env._max_episode_steps = max_num_step
 
         play(car, max_num_episodes, max_num_step)
         print('Game completed!')
