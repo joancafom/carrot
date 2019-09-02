@@ -134,7 +134,20 @@ def preprocess_image(rgb_image):
 
     return res
 
-# Based on the code from freecodecamp
+'''
+
+    This function is based on the one provided by Thomas Simonini
+    to FreeCodeCamp and can be found in:
+
+    Esta función está basada en la diseñada por Thomas Simonini para
+    FreeCodeCamp y puede ser encontrada en la siguiente dirección:
+    
+    https://github.com/simoninithomas/Deep_reinforcement_learning_Course/blob
+    /master/Dueling%20Double%20DQN%20with%20PER%20and%20fixed-q%20targets/Dueling
+    %20Deep%20Q%20Learning%20with%20Doom%20(%2B%20double%20DQNs%20and%20Prioritized
+    %20Experience%20Replay).ipynb
+
+'''
 def stack_frames(stacked_frames, state, is_new_episode, state_size_h=66, state_size_w=200, state_size_d=3, stack_size=3):
     '''
     Processes the state and uses it to produce a stack with the last `stack_size` images in memory
