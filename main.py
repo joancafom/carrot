@@ -283,7 +283,7 @@ def play(car, max_num_episodes, max_num_step):
 
             # Get the action to perform for the state
             action = car.get_action(state)
-
+            
             # Perform the action and retrieve the next state, reward and done
             next_state, reward, done, _ = env.step(convert_action_to_gym(action))
 
@@ -301,6 +301,8 @@ def play(car, max_num_episodes, max_num_step):
             # Update the state
             state = next_state
 
+        print("Num episode: {} | Total steps: {} | Total reward: {}".format((num_episode + 31), cur_step, sum_rewards))
+        
         # Increment the episode counter
         num_episode += 1
         rewards.append(sum_rewards)
