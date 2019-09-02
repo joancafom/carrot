@@ -1,6 +1,15 @@
 from collections import deque
 import numpy as np
 
+'''
+    This class is based on the one provided by Branko Blagojevic
+    in the article that can be found in:
+    Esta clase está basada en la especificada por Branko Blagojevic
+    que puede ser encontrada en el artículo:
+    
+    https://medium.com/ml-everything/learning-from-pixels-and-deep-q-networks-with-keras-20c5f3a78a0
+'''
+
 class ExperienceReplay:
     
     def __init__(self, buffer_size=10000):

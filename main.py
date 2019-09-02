@@ -31,6 +31,15 @@ rdCentre = RDCentre()
 
 # ----- Train & Play sections ----- 
 
+'''
+    The following function is highly influenced by the following tutorials:
+    La siguiente función está influenciada por los siguientes tutoriales:
+    
+    https://github.com/breeko/Simple-Reinforcement-Learning-with-Tensorflow/blob/
+    master/Part%204%20-%20Deep%20Q-Networks%20and%20Beyond%20with%20Keras.ipynb
+    https://keon.io/deep-q-learning/
+'''
+
 def train(car, batch_size, num_epochs, update_freq, annealing_steps, 
         max_num_episodes, pre_train_episodes, max_num_step, goal):
 

@@ -96,6 +96,14 @@ class CarAgent:
                 print("Loading target weights...")
                 self.target_qn.load_weights(self.target_weights_file)
 
+    '''
+        This NN architectured is based on the one provided by Branko Blagojevic
+        in the article that can be found in:
+        Esta arquitectura de red neuronal está basada en la especificada por Branko Blagojevic
+        que puede ser encontrada en el artículo:
+        
+        https://medium.com/ml-everything/learning-from-pixels-and-deep-q-networks-with-keras-20c5f3a78a0
+    '''
     def __build_model__(self):
 
          # The input of the NN will be the stacked frames dimensions
@@ -240,8 +248,15 @@ class CarAgent:
         
         return loss
 
-    # Google's Deep-Mind
-    # Fixed Q-Targets
+   '''
+        This method is based on the idea described in Google
+        Deepmind's paper:
+        Este método está basado en la idea descrita por el artículo de Google
+        Deepmind:
+        
+        "Human-level control through deep reinforcement learning"
+        https://storage.googleapis.com/deepmind-data/assets/papers/DeepMindNature14236Paper.pdf
+    '''
     def __transfer_network_weights__(self, source_nn, target_nn, tau):
 
         weights_to_transfer = (np.array(source_nn.get_weights()) * tau) + \

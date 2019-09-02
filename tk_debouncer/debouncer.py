@@ -3,6 +3,14 @@ from threading import Timer
 # How long a single key press lasts (as opposed to a press-and-hold).
 SINGLE_PRESS_MAX_SECONDS = 0.05
 
+'''
+    This is an adapted copy of the class provided by Adam Heins on:
+
+    Esta es una copia adaptada de la clase proporcionada por Adam Heins en:
+    
+    https://github.com/adamheins/tk-debouncer/blob/master/debouncer.py
+'''
+
 class Debouncer(object):
     ''' Debounces key events for Tkinter apps, so that press-and-hold works. '''
     def __init__(self, pressed_cb, released_cb, nd_pressed_cb=None):
